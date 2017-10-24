@@ -4,6 +4,9 @@
 server.py
 '''
 
+import socket
+import sys
+
 def main():
     pass
 
