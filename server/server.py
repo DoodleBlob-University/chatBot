@@ -50,9 +50,13 @@ def getArgs():
     parser.add_argument('-p', '--port', metavar='Port', type=int, help='Server port')
     return parser.parse_args()
 
+def drawHeader():
+    ''' draws program ui header '''
+    print('*** Server Header ***\nWelcome\n\n')
+
 def main():
     ''' main '''
-    # Add header and UI
+    drawHeader()
     args = getArgs()
     if args.port:
         server('', args.port).serverListen() # i have passed empty string for the host ip as it will be filled in later
