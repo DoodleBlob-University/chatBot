@@ -61,7 +61,7 @@ def main():
     args = getArgs()
     if args.port != 1143:
         print('** no server port specified using defult')
-    server('', args.port).serverListen() # i have passed empty string for the host ip as it will be filled in later
+    server('', int(args.port)).serverListen() # i have passed empty string for the host ip as it will be filled in later
 
 if __name__ == '__main__':
     main()
