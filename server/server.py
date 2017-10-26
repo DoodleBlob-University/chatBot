@@ -48,7 +48,7 @@ class server(object):
 def getArgs():
     ''' getArgs returns all program arguments '''
     parser = argparse.ArgumentParser(description='') # Add description 
-    parser.add_argument('-p', '--port', metavar='Port', type=int, help='Server port')
+    parser.add_argument('-p', '--port', metavar='Port', default=1143, type=int, help='Server port')
     return parser.parse_args()
 
 def drawHeader():
@@ -61,7 +61,7 @@ def main():
     args = getArgs()
     if args.port != 1143:
         print('** no server port specified using defult')
-    server('', int(args.port)).serverListen() # i have passed empty string for the host ip as it will be filled in later
+    server('', args.port).serverListen() # i have passed empty string for the host ip as it will be filled in later
 
 if __name__ == '__main__':
     main()
