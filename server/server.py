@@ -1,8 +1,5 @@
 #!/usr/bin/python
-
-''' 
-server.py
-'''
+''' server.py '''
 
 import socket
 import threading
