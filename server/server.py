@@ -4,6 +4,7 @@
 import socket
 import threading
 import argparse
+import netifaces
 import requests
 
 class server(object):
@@ -14,7 +15,7 @@ class server(object):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.hostIP, self.hostPort))
-        # print('** server started on {}:{}'.format(socket.gethostbyname(socket.gethostname()), self.hostPort))
+        print('** server started on\n** internal - {}:{}\n** external - {}:{}\n'.format(self.getServerIP()['internal'], self.hostPort,self.getServerIP()['external'] ,self.hostPort))
     
     def serverListen(self):
         ''' serverListen listens to incoming connects from clients and opens a new thread for each connected client '''
@@ -24,15 +25,17 @@ class server(object):
                 client, clientAddress = self.socket.accept()
                 client.settimeout(120)
                 threading.Thread(target=self.receiveFromClient,args = (client, clientAddress)).start()
-                print('** Client Connected {} - {}'.format(clientAddress, getLocation(clientAddress)['city']))
+                print('** Client Connected {} - {}'.format(clientAddress, self.getIpData(clientAddress)['city']))
             except:
                 raise Exception('Client connection error')
 
-    def getLocation(clientAddress):
+    def getIpData(self, clientAddress):
         request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))
         requestJson = request.json()
         if requestJson['status'] == 'success':
             return requestJson
+        else:
+            return {}
 
     def receiveFromClient(self, client, clientAddress):
         ''' receiveFromClient handles incoming data from clients '''
@@ -51,13 +54,9 @@ class server(object):
             except:
                 client.close()
                 return False
-    
-    def getLocation(self, address):
-        ''' getLocation returns json data for ip adress'''
-        request = requests.get('http://ip-api.com/json/{}'.format(address))
-        requestJson = request.json()
-        if requestJson['status'] == 'success':
-            return requestJson
+
+    def getServerIP(self):
+        return {'internal': netifaces.ifaddresses('en0')[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
 def getArgs():
     ''' getArgs returns all program arguments '''
