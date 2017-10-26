@@ -46,7 +46,7 @@ class server(object):
                     # send to language decoder
                     pass
                 else:
-                    print('** Client Disconeted {}'.format(clientAddress))
+                    print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
             except:
@@ -54,7 +54,7 @@ class server(object):
                 return False
 
     def getLocation(self, address):
-        ''' getLocation returns json data for ip adress'''
+        ''' getLocation returns json data for ip address'''
         request = requests.get('http://ip-api.com/json/{}'.format(address))
         requestJson = request.json()
         if requestJson['status'] == 'success':
