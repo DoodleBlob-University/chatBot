@@ -14,7 +14,7 @@ class server(object):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.hostIP, self.hostPort))
-        print('** server started on {}:{}'.format(socket.gethostbyname(socket.gethostname()), self.hostPort))
+        #print('** server started on {}:{}'.format(socket.gethostbyname(socket.gethostname()), self.hostPort))
 
     def serverListen(self):
         ''' serverListen listens to incoming connects from clients and opens a new thread for each connected client '''
@@ -29,7 +29,7 @@ class server(object):
                 raise Exception('Client connection error')
 
     def getLocation(clientAddress):
-        request = request.get('http://ip-api.com/json/{}'.format(clientAddress))
+        request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))
         requestJson = request.json()
         if requestJson['status'] == 'success':
             return requestJson
