@@ -24,10 +24,16 @@ class server(object):
                 client, clientAddress = self.socket.accept()
                 client.settimeout(120)
                 threading.Thread(target=self.receiveFromClient,args = (client, clientAddress)).start()
-                print('** Client Connected {}'.format(clientAddress))
+                print('** Client Connected {} - {}'.format(clientAddress, getLocation(clientAddress)['city']))
             except:
                 raise Exception('Client connection error')
-        
+
+    def getLocation(clientAddress):
+        request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))
+        requestJson = request.json()
+        if requestJson['status'] == 'success':
+            return requestJson
+
     def receiveFromClient(self, client, clientAddress):
         ''' receiveFromClient handles incoming data from clients '''
         byteSize = 1024
@@ -55,7 +61,7 @@ class server(object):
 
 def getArgs():
     ''' getArgs returns all program arguments '''
-    parser = argparse.ArgumentParser(description='') # Add description 
+    parser = argparse.ArgumentParser(description='') # Add description
     parser.add_argument('-p', '--port', metavar='Port', default=1143, type=int, help='Server port')
     return parser.parse_args()
 
