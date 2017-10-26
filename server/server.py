@@ -56,17 +56,8 @@ class server(object):
                 client.close()
                 return False
 
-<<<<<<< HEAD
     def getServerIP(self):
         return {'internal': netifaces.ifaddresses('en0')[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
-=======
-    def getLocation(self, address):
-        ''' getLocation returns json data for ip address'''
-        request = requests.get('http://ip-api.com/json/{}'.format(address))
-        requestJson = request.json()
-        if requestJson['status'] == 'success':
-            return requestJson
->>>>>>> d565106eb24bafaee42da6df676373235dd2e3ca
 
 def getArgs():
     ''' getArgs returns all program arguments '''
