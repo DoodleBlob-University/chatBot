@@ -4,6 +4,7 @@
 import socket
 import threading
 import argparse
+import requests
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
@@ -13,8 +14,8 @@ class server(object):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.hostIP, self.hostPort))
-        print('** server started on {}:{}'.format(socket.gethostbyname(socket.gethostname()), self.hostPort))
-
+        # print('** server started on {}:{}'.format(socket.gethostbyname(socket.gethostname()), self.hostPort))
+    
     def serverListen(self):
         ''' serverListen listens to incoming connects from clients and opens a new thread for each connected client '''
         self.socket.listen(15)
@@ -34,7 +35,7 @@ class server(object):
             try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
-                    # receivedStr = receivedData.decode()
+                    receivedStr = receivedData.decode()
                     # send to language decoder
                     pass
                 else:
@@ -44,6 +45,13 @@ class server(object):
             except:
                 client.close()
                 return False
+    
+    def getLocation(self, address):
+        ''' getLocation returns json data for ip adress'''
+        request = requests.get('http://ip-api.com/json/{}'.format(address))
+        requestJson = request.json()
+        if requestJson['status'] == 'success':
+            return requestJson
 
 def getArgs():
     ''' getArgs returns all program arguments '''
