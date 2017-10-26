@@ -20,7 +20,19 @@ def main():
     ''' main '''
     args = getArgs()
     drawHeader()
-    print(args.port)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((args.address, args.port))
+    while True:
+        messageData = input('>> ')
+        if messageData.lower() == 'exit':
+            exit()
+        elif messageData == '':
+            continue
+        else:
+            messageData = messageData.encode()
+            sock.sendall(messageData)
+            receivedData = sock.recv(1024)
+            print(receivedData.decode())
 
 if __name__ == '__main__':
     main()
