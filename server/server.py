@@ -24,7 +24,7 @@ class server(object):
                 client, clientAddress = self.socket.accept()
                 client.settimeout(120)
                 threading.Thread(target=self.receiveFromClient,args = (client, clientAddress)).start()
-                print('** Client Connected {}'.format(clientAddress))
+                print('** Client Connected {}{}'.format(clientAddress, getLocation(clientAddress)['city']))
             except:
                 raise Exception('Client connection error')
 
