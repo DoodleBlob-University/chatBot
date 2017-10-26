@@ -30,6 +30,7 @@ class server(object):
                 raise Exception('Client connection error')
 
     def getIpData(self, clientAddress):
+        '''gets ip information in json format from ip address'''
         request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))
         requestJson = request.json()
         if requestJson['status'] == 'success':
@@ -48,15 +49,24 @@ class server(object):
                     # send to language decoder
                     pass
                 else:
-                    print('** Client Disconeted {}'.format(clientAddress))
+                    print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
             except:
                 client.close()
                 return False
 
+<<<<<<< HEAD
     def getServerIP(self):
         return {'internal': netifaces.ifaddresses('en0')[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
+=======
+    def getLocation(self, address):
+        ''' getLocation returns json data for ip address'''
+        request = requests.get('http://ip-api.com/json/{}'.format(address))
+        requestJson = request.json()
+        if requestJson['status'] == 'success':
+            return requestJson
+>>>>>>> d565106eb24bafaee42da6df676373235dd2e3ca
 
 def getArgs():
     ''' getArgs returns all program arguments '''
