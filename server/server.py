@@ -6,6 +6,7 @@ import threading
 import argparse
 
 class server(object):
+    ''' server is a class that handled network connections, pass host ip and host port for init'''
     def __init__(self, hostIP, hostPort):
         self.hostIP = hostIP
         self.hostPort = hostPort
@@ -14,6 +15,7 @@ class server(object):
         self.socket.bind((self.hostIP, self.hostPort))
 
     def serverListen(self):
+        ''' serverListen listens to incoming connects from clients and opens a new thread for each connected client '''
         self.socket.listen(15)
         while True:
             try:
@@ -25,6 +27,7 @@ class server(object):
                 raise Exception('Client connection error')
         
     def receiveFromClient(self, client, clientAddress):
+        ''' receiveFromClient handles incoming data from clients '''
         byteSize = 1024
         while True:
             try:
@@ -52,7 +55,7 @@ def main():
     # Add header and UI
     args = getArgs()
     if args.port:
-        server('', args.port).serverListen()
+        server('', args.port).serverListen() # i have passed empty string for the host ip as it will be filled in later
 
 if __name__ == '__main__':
     main()
