@@ -1,5 +1,5 @@
 # B2 Chat Bot
-Welcome to our chat bot, we have loads of into coming soon.
+Welcome to our chat bot, we have loads of info coming soon.
 
 ## Getting Started
 Follow the next few steps to get started.
