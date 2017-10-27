@@ -23,3 +23,6 @@ We are on [Discord](https://discord.gg/FkX5Y6G) :)
 
 ## Progress
 We are currently using our [Sprint Tracker](http://goo.gl/GNt4Bn) to track our work. Have a look :)
+
+## Need Help With Git ?
+You might not have used git before. Dont worry by following the getting started section you will be able to grab our code and run it. I have created a [document](https://docs.google.com/document/d/15hcAJ_JbFFlRi2ETfEzvyAO5gww4MC5464_qTIiNPoM/edit?usp=sharing) to help with the very basic commands of git. I have also found an interactive [web app](https://try.github.io/levels/1/challenges/1) to help you get started with git.
