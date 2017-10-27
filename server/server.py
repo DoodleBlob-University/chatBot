@@ -35,6 +35,8 @@ class server(object):
         requestJson = request.json()
         if requestJson['status'] == 'success':
             return requestJson
+        if requestJson['status'] == 'fail':
+            return self.getIpData('')
         else:
             return {}
 
