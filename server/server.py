@@ -7,6 +7,15 @@ import argparse
 import netifaces
 import requests
 
+class dataParsing(object):
+    ''' '''
+    def __init__(self, receivedStr):
+        self.receivedStr = receivedStr
+        self.dataInterpretation(self.receivedStr)
+
+    def dataInterpretation(receivedStr):
+        pass
+
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
     def __init__(self, hostIP, hostPort):
