@@ -13,6 +13,7 @@ class dataParsing(object):
     def __init__(self, receivedStr):
         self.receivedStr = receivedStr
         self.dataInterpretation(self.receivedStr)
+        #import_module(moduleName)
 
     def dataInterpretation(self, receivedStr):
         with open('keywords.json') as json_data:
