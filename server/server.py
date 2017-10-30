@@ -19,6 +19,14 @@ class dataParsing(object):
     def dataInterpretation(self, receivedStr):
         with open('keywords.json') as json_data:
             jsonData = json.load(json_data)
+            receivedStr = receivedStr.split(" ")
+            found = []
+            for word in receivedStr:
+                for keyword in jsonData['weather']:
+                    if keyword == word:
+                        found.append(keyword)
+
+      
         # split receivedStr into words, loop over words and check if they are in the json
         # dont reutrn or print anything
 
