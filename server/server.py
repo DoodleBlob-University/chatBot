@@ -12,7 +12,8 @@ class dataParsing(object):
     def __init__(self, receivedStr):
         self.receivedStr = receivedStr
         self.dataInterpretation(self.receivedStr)
-        #import_module(moduleName)
+        #import api
+        #print(api.apiCall('https://api.darksky.net/forecast/faee14155496c39ee342cfd902632560/37.8267,-122.4233'))
 
     def dataInterpretation(receivedStr):
         pass
