@@ -4,6 +4,7 @@
 import socket
 import threading
 import argparse
+import json
 import netifaces
 import requests
 
@@ -15,8 +16,11 @@ class dataParsing(object):
         #import api
         #print(api.apiCall('https://api.darksky.net/forecast/faee14155496c39ee342cfd902632560/37.8267,-122.4233'))
 
-    def dataInterpretation(receivedStr):
-        pass
+    def dataInterpretation(self, receivedStr):
+        with open('keywords.json') as json_data:
+            jsonData = json.load(json_data)
+        # split receivedStr into words, loop over words and check if they are in the json
+        # dont reutrn or print anything
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
@@ -58,7 +62,7 @@ class server(object):
                 if receivedData and type(receivedData) == bytes:
                     receivedStr = receivedData.decode()
                     # send to language decoder
-                    pass
+                    dataParsing(receivedStr)
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
