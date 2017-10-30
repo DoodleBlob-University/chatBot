@@ -61,7 +61,7 @@ class server(object):
                 if receivedData and type(receivedData) == bytes:
                     receivedStr = receivedData.decode()
                     # send to language decoder
-                    pass
+                    dataParsing(receivedStr)
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
