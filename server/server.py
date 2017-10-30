@@ -35,10 +35,8 @@ class server(object):
         requestJson = request.json()
         if requestJson['status'] == 'success':
             return requestJson
-        elif requestJson['status'] == 'fail':
-            return self.getIpData('')
         else:
-            return {}
+            return self.getIpData('')
 
     def receiveFromClient(self, client, clientAddress):
         ''' receiveFromClient handles incoming data from clients '''
@@ -58,8 +56,8 @@ class server(object):
                 client.close()
                 return False
 
-    def getServerIP(self):
-        return {'internal': netifaces.ifaddresses('en0')[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
+def getServerIP(self):
+    return {'internal': netifaces.ifaddresses('en0')[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
 def getArgs():
     ''' getArgs returns all program arguments '''
