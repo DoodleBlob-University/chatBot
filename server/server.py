@@ -16,7 +16,7 @@ class server(object):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.hostIP, self.hostPort))
         print('** server started on\n** internal - {}:{}\n** external - {}:{}\n'.format(self.getServerIP()['internal'], self.hostPort,self.getServerIP()['external'] ,self.hostPort))
-    
+
     def serverListen(self):
         ''' serverListen listens to incoming connects from clients and opens a new thread for each connected client '''
         self.socket.listen(15)
@@ -35,7 +35,7 @@ class server(object):
         requestJson = request.json()
         if requestJson['status'] == 'success':
             return requestJson
-        if requestJson['status'] == 'fail':
+        elif requestJson['status'] == 'fail':
             return self.getIpData('')
         else:
             return {}
@@ -76,7 +76,7 @@ def main():
     drawHeader()
     args = getArgs()
     if args.port != 1143:
-        print('** no server port specified using defult')
+        print('** no server port specified using default')
     server('', args.port).serverListen() # i have passed empty string for the host ip as it will be filled in later
 
 if __name__ == '__main__':
