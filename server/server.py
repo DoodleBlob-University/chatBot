@@ -17,8 +17,9 @@ class dataParsing(object):
 
     def dataInterpretation(self, receivedStr):
         with open('keywords.json') as json_data:
-            d = json.load(json_data)
-            print(d)
+            jsonData = json.load(json_data)
+        # split receivedStr into words, loop over words and check if they are in the json
+        # dont reutrn or print anything
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
