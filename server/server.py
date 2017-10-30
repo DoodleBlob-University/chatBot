@@ -4,6 +4,7 @@
 import socket
 import threading
 import argparse
+import json
 import netifaces
 import requests
 
@@ -13,8 +14,10 @@ class dataParsing(object):
         self.receivedStr = receivedStr
         self.dataInterpretation(self.receivedStr)
 
-    def dataInterpretation(receivedStr):
-        pass
+    def dataInterpretation(self, receivedStr):
+        with open('keywords.json') as json_data:
+            d = json.load(json_data)
+            print(d)
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
