@@ -47,8 +47,15 @@ class server(object):
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     receivedStr = receivedData.decode().replace('!',"").replace('?',"").replace('.',"")
-                    response = 'you are talking about {}'.format(self.searchJSON(receivedStr)[0]).encode()
-                    client.sendall(response)
+                    key = str(self.searchJSON(receivedStr))
+                    print(key)
+                    sendtoclient = b""
+                    if key == "['weather']": sendtoclient = b"You are talking about weather"
+                    elif key == "['cinema']": sendtoclient = b"You are talking about cinema"
+                    elif key == "['celery']": sendtoclient = b(str(celery(self)))
+                    else: sendtoclient = b"Sorry, I don't understand what you are talking about."
+
+                    client.sendall(sendtoclient)
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
@@ -74,6 +81,15 @@ class server(object):
                     if word.lower() == keyword:
                         found.append(word)
                         return [key]
+
+    def celery(self):
+        rand = random.randint(0, 4)
+        celerystring = ""
+        if rand == 0: celerystring = "Good morning Paul, what will your first sequence of the day be?"
+        elif rand == 1: celerystring = "Load sequence Oyster"
+        elif rand == 2: celerystring = "4d3d3 engaged"
+        elif rand == 3: celerystring = "Generating nude Tayne"
+        return celerystring
 
 def getArgs():
     ''' getArgs returns all program arguments '''
