@@ -47,9 +47,8 @@ class server(object):
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     receivedStr = receivedData.decode().replace('!',"").replace('?',"").replace('.',"")
-                    # send to language decoder
-                    client.sendall(receivedData)
-                    print(self.searchJSON(receivedStr))
+                    response = 'you are talking about {}'.format(self.searchJSON(receivedStr)[0]).encode()
+                    client.sendall(response)
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
