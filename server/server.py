@@ -59,6 +59,7 @@ class server(object):
                 return False
 
     def getServerIP(self):
+        ''' returns servers internal and external ip address '''
         deviseName = netifaces.gateways()['default'][netifaces.AF_INET][1]
         return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
