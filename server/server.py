@@ -49,7 +49,7 @@ class server(object):
                     receivedStr = receivedData.decode()
                     # send to language decoder
                     client.sendall(receivedData)
-                    print(searchJSON(receivedStr))
+                    print(self.searchJSON(receivedStr))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
@@ -64,16 +64,16 @@ class server(object):
         return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
     def searchJSON(self, recievedStr):
-        with open('keywords.json') as json_data:
-            jsonData = json.load(json_data)
-            recievedList = recievedStr.split(" ")
-            found = []
-            for key in jsonData:
-                for keyword in jsonData[key]:
-                    for word in recievedList:
-                        if word == keyword:
-                            found.append(keyword)
-            return(found)
+        request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3f6uTRxnnISwgawNP_h741zJFpLbks5aBGZXwA%3D%3D')
+        jsonData = request.json()
+        recievedList = recievedStr.split(" ")
+        found = []
+        for key in jsonData:
+            for keyword in jsonData[key]:
+                for word in recievedList:
+                    if word.lower() == keyword:
+                        found.append(word)
+                        return [key]
 
 def getArgs():
     ''' getArgs returns all program arguments '''
