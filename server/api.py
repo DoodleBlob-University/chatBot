@@ -21,7 +21,7 @@ def locu_search(post_code):
     json_obj = str(response, 'utf-8')
     data = json.loads(json_obj)   
     for item in data['cinemas']:
-        print (item['name'], item['distance'])
+        print (str(count+1),".",item['name'], item['distance'], "miles") #
         count += 1
         if count == limit: #print only first 3 cinemas
             break
