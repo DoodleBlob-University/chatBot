@@ -84,7 +84,7 @@ class server(object):
 
     def celery(self):
         from random import randint
-        rand = randint(0, 4)
+        rand = randint(0, 3)
         celerystring = b""
         if rand == 0: celerystring = b"Good morning Paul, what will your first sequence of the day be?"
         elif rand == 1: celerystring = b"Load sequence Oyster"
