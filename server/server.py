@@ -64,6 +64,7 @@ class server(object):
         return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
     def searchJSON(self, recievedStr):
+        ''' Gets JSON data from a webpage - the git repo '''
         request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3f6uTRxnnISwgawNP_h741zJFpLbks5aBGZXwA%3D%3D')
         jsonData = request.json()
         recievedList = recievedStr.split(" ")
