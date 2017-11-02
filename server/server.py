@@ -12,7 +12,7 @@ class dataParsing(object):
     ''' '''
     def __init__(self, receivedStr):
         self.receivedStr = receivedStr
-        self.dataInterpretation(self.receivedStr)
+        # self.dataInterpretation(self.receivedStr)
         #import api
         #print(api.apiCall('https://api.darksky.net/forecast/faee14155496c39ee342cfd902632560/37.8267,-122.4233'))
 
@@ -23,10 +23,10 @@ class dataParsing(object):
             found = []
             for key in jsonData:
                 for keyword in jsonData[key]:
-                    for word in recievedList
+                    for word in recievedList:
                         if word == keyword:
                             found.append(keyword)
-            print(found)
+            return(found)
 
 
         # split receivedStr into words, loop over words and check if they are in the json
@@ -72,8 +72,9 @@ class server(object):
                 if receivedData and type(receivedData) == bytes:
                     receivedStr = receivedData.decode()
                     # send to language decoder
-                    # dataParsing(receivedStr)
                     client.sendall(receivedData)
+                    #datax = dataParsing(receivedStr)
+                    #print(dataParsing.dataInterpretation(receivedStr))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
@@ -83,7 +84,9 @@ class server(object):
                 return False
 
     def getServerIP(self):
-        return {'internal': netifaces.ifaddresses('en0')[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
+        deviseName = netifaces.gateways()['default'][netifaces.AF_INET][1]
+        return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
+        
 
 def getArgs():
     ''' getArgs returns all program arguments '''
