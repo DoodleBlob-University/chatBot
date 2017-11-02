@@ -28,7 +28,6 @@ class dataParsing(object):
                             found.append(keyword)
             return(found)
 
-
         # split receivedStr into words, loop over words and check if they are in the json
         # dont reutrn or print anything
 
@@ -84,9 +83,9 @@ class server(object):
                 return False
 
     def getServerIP(self):
-        deviseName = netifaces.gateways()['default'][netifaces.AF_INET][1]
-        return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
-        
+        ''' returns servers internal and external ip address '''
+        deviceName = netifaces.gateways()['default'][netifaces.AF_INET][1]
+        return {'internal': netifaces.ifaddresses(deviceName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
 def getArgs():
     ''' getArgs returns all program arguments '''
