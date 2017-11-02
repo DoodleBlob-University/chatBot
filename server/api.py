@@ -10,11 +10,10 @@ def apiCall(apiURL):
 if __name__ == '__main__':
     pass ## add tests here
 
-
-
-
 #http://api.cinelist.co.uk/search/cinemas/postcode/LU12HN 
-def locu_search(post_code):    
+def locu_search(post_code): 
+    count = 0
+    limit = 3 # new limit
     url = 'http://api.cinelist.co.uk/search/cinemas/postcode/' 
     locality = post_code.replace(' ', '%20')
     final_url = url + locality 
@@ -23,5 +22,8 @@ def locu_search(post_code):
     data = json.loads(json_obj)   
     for item in data['cinemas']:
         print (item['name'], item['distance'])
-locu_search("CV12HR") 
+        count += 1
+        if count == limit: #print only first 3 cinemas
+            break
+locu_search(input("What is your postcode? ")) # take user input
 #finding nearest cinema using postcode
