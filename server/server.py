@@ -8,30 +8,6 @@ import json
 import netifaces
 import requests
 
-class dataParsing(object):
-    ''' '''
-    def __init__(self, receivedStr):
-        self.receivedStr = receivedStr
-        # self.dataInterpretation(self.receivedStr)
-        #import api
-        #print(api.apiCall('https://api.darksky.net/forecast/faee14155496c39ee342cfd902632560/37.8267,-122.4233'))
-
-    def dataInterpretation(self, recievedStr):
-        with open('keywords.json') as json_data:
-            jsonData = json.load(json_data)
-            recievedList = recievedStr.split(" ")
-            found = []
-            for key in jsonData:
-                for keyword in jsonData[key]:
-                    for word in recievedList:
-                        if word == keyword:
-                            found.append(keyword)
-            return(found)
-
-
-        # split receivedStr into words, loop over words and check if they are in the json
-        # dont reutrn or print anything
-
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
     def __init__(self, hostIP, hostPort):
@@ -73,8 +49,7 @@ class server(object):
                     receivedStr = receivedData.decode()
                     # send to language decoder
                     client.sendall(receivedData)
-                    #datax = dataParsing(receivedStr)
-                    #print(dataParsing.dataInterpretation(receivedStr))
+                    print(searchJSON(receivedStr))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
@@ -86,7 +61,18 @@ class server(object):
     def getServerIP(self):
         deviseName = netifaces.gateways()['default'][netifaces.AF_INET][1]
         return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
-        
+
+    def searchJSON(self, recievedStr):
+        with open('keywords.json') as json_data:
+            jsonData = json.load(json_data)
+            recievedList = recievedStr.split(" ")
+            found = []
+            for key in jsonData:
+                for keyword in jsonData[key]:
+                    for word in recievedList:
+                        if word == keyword:
+                            found.append(keyword)
+            return(found)
 
 def getArgs():
     ''' getArgs returns all program arguments '''
