@@ -16,17 +16,19 @@ class dataParsing(object):
         #import api
         #print(api.apiCall('https://api.darksky.net/forecast/faee14155496c39ee342cfd902632560/37.8267,-122.4233'))
 
-    def dataInterpretation(self, receivedStr):
+    def dataInterpretation(self, recievedStr):
         with open('keywords.json') as json_data:
             jsonData = json.load(json_data)
-            receivedStr = receivedStr.split(" ")
+            recievedList = recievedStr.split(" ")
             found = []
-            for word in receivedStr:
-                for keyword in jsonData['weather']:
-                    if keyword == word:
-                        found.append(keyword)
+            for key in jsonData:
+                for keyword in jsonData[key]:
+                    for word in recievedList
+                        if word == keyword:
+                            found.append(keyword)
+            print(found)
 
-      
+
         # split receivedStr into words, loop over words and check if they are in the json
         # dont reutrn or print anything
 
@@ -70,11 +72,9 @@ class server(object):
                 if receivedData and type(receivedData) == bytes:
                     receivedStr = receivedData.decode()
                     # send to language decoder
-                    # dataParsing(receivedStr)
-                    client.sendall(b'Server is saying hello')
-                    print('saying hello to {} - {}'.format(clientAddress, self.getIpData(clientAddress)['city'])) # added this for client testing
+                    dataParsing(receivedStr)
                 else:
-                    print('** Client Disconnected {} - {}'.format(clientAddress, self.getIpData(clientAddress)['city']))
+                    print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
             except:
