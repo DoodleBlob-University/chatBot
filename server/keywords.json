@@ -30,8 +30,42 @@
     "drizzle",
     "coat","hat",
     "suncream",
-    "sunblock",
-    "tomorrow",
-    "today"
+    "sunblock"
   ]
+  ,"cinema":
+  [
+    "cinema",
+    "movies",
+    "films",
+    "shows",
+    "odean",
+    "showcase",
+    "box office",
+    "boxoffice",
+    "tickets",
+    "screening",
+    "showing",
+    "imax",
+    "showcase",
+    "vue",
+    "show",
+    "flick",
+    "cinematography",
+    "screen",
+    "biopic",
+    "horror",
+    "romcom",
+    "romantic",
+    "action",
+    "theatre",
+    "drama",
+    "sci-fi",
+    "scifi",
+    "watch",
+    "view",
+    "viewing",
+    "western",
+    "thriller"
+    ]
 }
+
