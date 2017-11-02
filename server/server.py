@@ -46,7 +46,7 @@ class server(object):
             try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
-                    receivedStr = receivedData.decode()
+                    receivedStr = receivedData.decode().replace('!',"").replace('?',"").replace('.',"")
                     # send to language decoder
                     client.sendall(receivedData)
                     print(self.searchJSON(receivedStr))
