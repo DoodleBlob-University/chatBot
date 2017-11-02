@@ -52,7 +52,7 @@ class server(object):
                     sendtoclient = b""
                     if key == "['weather']": sendtoclient = b"You are talking about weather"
                     elif key == "['cinema']": sendtoclient = b"You are talking about cinema"
-                    elif key == "['celery']": sendtoclient = b(str(celery(self)))
+                    elif key == "['celery']": sendtoclient = self.celery()
                     else: sendtoclient = b"Sorry, I don't understand what you are talking about."
 
                     client.sendall(sendtoclient)
@@ -83,12 +83,13 @@ class server(object):
                         return [key]
 
     def celery(self):
-        rand = random.randint(0, 4)
-        celerystring = ""
-        if rand == 0: celerystring = "Good morning Paul, what will your first sequence of the day be?"
-        elif rand == 1: celerystring = "Load sequence Oyster"
-        elif rand == 2: celerystring = "4d3d3 engaged"
-        elif rand == 3: celerystring = "Generating nude Tayne"
+        from random import randint
+        rand = randint(0, 4)
+        celerystring = b""
+        if rand == 0: celerystring = b"Good morning Paul, what will your first sequence of the day be?"
+        elif rand == 1: celerystring = b"Load sequence Oyster"
+        elif rand == 2: celerystring = b"4d3d3 engaged"
+        elif rand == 3: celerystring = b"Generating nude Tayne"
         return celerystring
 
 def getArgs():
