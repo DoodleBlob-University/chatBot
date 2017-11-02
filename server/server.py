@@ -71,6 +71,7 @@ class server(object):
                     receivedStr = receivedData.decode()
                     # send to language decoder
                     dataParsing(receivedStr)
+                    client.send(b'Server is saying hello') # added this for client testing
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
