@@ -40,6 +40,9 @@ def main():
         messageData = input('>> ')
         if messageData.lower() == 'exit':
             exit()
+        elif messageData.lower() == 'clear':
+            clear()
+            drawHeader()
         elif messageData == '':
             continue
         else:
