@@ -48,7 +48,7 @@ class server(object):
                 if receivedData and type(receivedData) == bytes:
                     receivedStr = receivedData.decode().replace('!',"").replace('?',"").replace('.',"")
                     key = str(self.searchJSON(receivedStr))
-                    print(key)
+                    print("{} » {}".format(clientAddress[1], key))
                     sendtoclient = b""
                     if key == "['weather']": sendtoclient = b"You are talking about weather"
                     elif key == "['cinema']": sendtoclient = b"You are talking about cinema"
@@ -60,7 +60,8 @@ class server(object):
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
-            except:
+            except Exception as e:
+                print("{} - Disconnecting {}\n".format(e, clientAddress))
                 client.close()
                 return False
 
