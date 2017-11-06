@@ -1,0 +1,3 @@
+Comprehensive GUI
+Ability to respond with images pulled from an interenet image search
+Have a natural language that can stem out from it's original discussion 
