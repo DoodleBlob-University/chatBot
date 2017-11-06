@@ -7,6 +7,7 @@ import argparse
 import json
 import netifaces
 import requests
+from aes import AESEncryption
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
@@ -47,7 +48,8 @@ class server(object):
             try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
-                    receivedStr = receivedData.decode().replace('!',"").replace('?',"").replace('.',"")
+                    aesObject = AESEncryption(self.key)
+                    receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"").replace('.',"")
                     client.sendall(self.formResponse(receivedStr, self.key))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
@@ -59,16 +61,15 @@ class server(object):
                 return False
 
     def formResponse(self, receivedStr, key):
-        from aes import AESEncryption
         aesObject = AESEncryption(key)
         keyWord = str(self.searchJSON(receivedStr))
-        if keyWord == "['weather']": 
+        if keyWord == "['weather']":
             return aesObject.encrypt("You are talking about weather")
         elif keyWord == "['cinema']":
             return aesObject.encrypt("You are talking about cinema")
         elif keyWord == "['celery']":
             return aesObject.encrypt(self.celery())
-        else: 
+        else:
             return aesObject.encrypt("Sorry, I don't understand what you are talking about.")
 
     def getServerIP(self):
