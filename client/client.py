@@ -7,12 +7,14 @@ import argparse
 import os
 import subprocess
 from colorama import Fore, Style
+from aes import AESEncryption
 
 def getArgs():
     ''' getArgs returns all program arguments '''
     parser = argparse.ArgumentParser(description='') # Add description
     parser.add_argument('-p', '--port', metavar='Port', type=int, default=1143, help='Server port')
     parser.add_argument('-a', '--address', metavar='Address', required=True, type=str, help='Server address')
+    parser.add_argument('-k', '--key', metavar='Key', default='gbaei395y27ny9', type=str, help='Encryption Key')
     return parser.parse_args()
 
 def clear():
@@ -46,10 +48,10 @@ def main():
         elif messageData == '':
             continue
         else:
-            messageData = messageData.encode()
-            sock.sendall(messageData)
+            aesObject = AESEncryption(args.key)
+            sock.sendall(aesObject.encrypt(messageData))
             receivedData = sock.recv(1024)
-            print(receivedData.decode())
+            print(aesObject.decrypt(receivedData))
 
 if __name__ == '__main__':
     main()
