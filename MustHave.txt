@@ -1,0 +1,5 @@
+Working weather and cinema API
+Reliable client - server connection 
+User error checking
+Output API information as a string sentance
+Prompt the user with a pre determined greetings
