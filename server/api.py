@@ -32,7 +32,8 @@ locu_search(input("What is your postcode? ")) # take user input
 #finding nearest cinema using postcode
 
 #https://api.themoviedb.org/3/movie/popular?api_key
-def locu_search(region): 
+def locu_search(region):
+    region = region.upper()
     with open('Country.json') as data_file:
         dataC = json.load(data_file)
     for i in dataC['country']: #check if the country is real using json file
