@@ -60,9 +60,6 @@ class server(object):
                 client.close()
                 return False
 
-    def initialResponse ():
-        print("Hi, I'm a weather and cinema chatbot is there anything I can help you with today?")
-            
     def formResponse(self, receivedStr, key):
         aesObject = AESEncryption(key)
         keyWord = str(self.searchJSON(receivedStr))
