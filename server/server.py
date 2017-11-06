@@ -10,9 +10,10 @@ import requests
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
-    def __init__(self, hostIP, hostPort):
+    def __init__(self, hostIP, hostPort, key):
         self.hostIP = hostIP
         self.hostPort = hostPort
+        self.key = key
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.hostIP, self.hostPort))
@@ -47,15 +48,7 @@ class server(object):
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     receivedStr = receivedData.decode().replace('!',"").replace('?',"").replace('.',"")
-                    key = str(self.searchJSON(receivedStr))
-                    print("{} » {}".format(clientAddress[1], key))
-                    sendtoclient = b""
-                    if key == "['weather']": sendtoclient = b"You are talking about weather"
-                    elif key == "['cinema']": sendtoclient = b"You are talking about cinema"
-                    elif key == "['celery']": sendtoclient = self.celery()
-                    else: sendtoclient = b"Sorry, I don't understand what you are talking about."
-
-                    client.sendall(sendtoclient)
+                    client.sendall(self.formResponse(receivedStr, self.key))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
@@ -64,6 +57,19 @@ class server(object):
                 print("{} - Disconnecting {}\n".format(e, clientAddress))
                 client.close()
                 return False
+
+    def formResponse(self, receivedStr, key):
+        from aes import AESEncryption
+        aesObject = AESEncryption(key)
+        keyWord = str(self.searchJSON(receivedStr))
+        if keyWord == "['weather']": 
+            return aesObject.encrypt("You are talking about weather")
+        elif keyWord == "['cinema']":
+            return aesObject.encrypt("You are talking about cinema")
+        elif keyWord == "['celery']":
+            return aesObject.encrypt(self.celery())
+        else: 
+            return aesObject.encrypt("Sorry, I don't understand what you are talking about.")
 
     def getServerIP(self):
         ''' returns servers internal and external ip address '''
@@ -87,16 +93,21 @@ class server(object):
         from random import randint
         rand = randint(0, 3)
         celerystring = b""
-        if rand == 0: celerystring = b"Good morning Paul, what will your first sequence of the day be?"
-        elif rand == 1: celerystring = b"Load sequence Oyster"
-        elif rand == 2: celerystring = b"4d3d3 engaged"
-        elif rand == 3: celerystring = b"Generating nude Tayne"
+        if rand == 0: celerystring = "Good morning Paul, what will your first sequence of the day be?"
+        elif rand == 1: celerystring = "Load sequence Oyster"
+        elif rand == 2: celerystring = "4d3d3 engaged"
+        elif rand == 3: celerystring = "Generating nude Tayne"
         return celerystring
+
+    def encrypt(self, rawData, key):
+        aesObject = AES.new(key, AES.MODE_CBC, )
+        encryptedData = aesObject.encrypt(rawData)
 
 def getArgs():
     ''' getArgs returns all program arguments '''
     parser = argparse.ArgumentParser(description='') # Add description
     parser.add_argument('-p', '--port', metavar='Port', default=1143, type=int, help='Server port')
+    parser.add_argument('-k', '--key', metavar='Key', default='gbaei395y27ny9', type=str, help='Encryption Key')
     return parser.parse_args()
 
 def drawHeader():
@@ -109,7 +120,7 @@ def main():
     args = getArgs()
     if args.port != 1143:
         print('** no server port specified using default')
-    server('', args.port).serverListen() # i have passed empty string for the host ip as it will be filled in later
+    server('', args.port, args.key).serverListen() # i have passed empty string for the host ip as it will be filled in later
 
 if __name__ == '__main__':
     main()
