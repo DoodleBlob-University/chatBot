@@ -62,12 +62,13 @@ class server(object):
 
     def formResponse(self, receivedStr, key):
         aesObject = AESEncryption(key)
-        keyWord = str(self.searchJSON(receivedStr))
-        if keyWord == "['weather']":
+        keysFound = self.searchJSON(receivedStr)
+        ## add cure if statment here please
+        if 'weather' in keysFound:
             return aesObject.encrypt("You are talking about weather")
-        elif keyWord == "['cinema']":
+        elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
-        elif keyWord == "['celery']":
+        elif 'celery' in keysFound:
             return aesObject.encrypt(self.celery())
         else:
             return aesObject.encrypt("Sorry, I don't understand what you are talking about.")
@@ -82,13 +83,14 @@ class server(object):
         request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3f6uTRxnnISwgawNP_h741zJFpLbks5aBGZXwA%3D%3D')
         jsonData = request.json()
         recievedList = recievedStr.split(" ")
-        found = []
+        keysFound = []
         for key in jsonData:
             for keyword in jsonData[key]:
                 for word in recievedList:
                     if word.lower() == keyword:
-                        found.append(word)
-                        return [key]
+                        keysFound.append(key)
+                        return keysFound
+        return keysFound
 
     def celery(self):
         from random import randint
