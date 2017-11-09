@@ -11,52 +11,86 @@ def apiCall(apiURL):
 if __name__ == '__main__':
     pass ## add tests here
 
-#http://api.cinelist.co.uk/search/cinemas/postcode/LU12HN 
+#http://api.cinelist.co.uk/search/cinemas/postcode/LU12HN
 def locu_search(post_code): 
     count = 0
-    limit = 3 # new limit
+    limit = 3
     url = 'http://api.cinelist.co.uk/search/cinemas/postcode/' 
     locality = post_code.replace(' ', '%20')
     final_url = url + locality 
     response = urllib.request.urlopen(final_url).read() 
     json_obj = str(response, 'utf-8')
-    data = json.loads(json_obj)   
+    data = json.loads(json_obj)
     for item in data['cinemas']:
-        print (str(count+1),".",item['name'], item['distance'], "miles") 
+        print (str(count+1),".",item['name'],item['distance'], "miles")  
         print(" ")
-        time.sleep(1.5) # slow down the iteration
+        time.sleep(1.5)
         count += 1
-        if count == limit: #print only first 3 cinemas
+        if count == limit:
             break
-locu_search(input("What is your postcode? ")) # take user input
-#finding nearest cinema using postcode
+locu_search(input("What is your postcode? "))
 
-#https://api.themoviedb.org/3/movie/popular?api_key
-def locu_search(region):
-    region = region.upper()
-    with open('Country.json') as data_file:
-        dataC = json.load(data_file)
-    for i in dataC['country']: #check if the country is real using json file
-        if region in i['Name']:
-            api_key = '2f04aec7f1a13d66bdce37ee3db645cb'
+def send_request(IDC):
+    count = 0
+    limit = 3
+    #https://api.internationalshowtimes.com/v4/cinemas/?location=52.5,13.37&distance=1000
+    try:
+        response = requests.get(
+            url="https://api.internationalshowtimes.com/v4/cinemas/?location=52.4,-1.5&distance=18",
+            params={
+                "countries": "GB",
+            },
+            headers={
+                "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+            },
+        )
+        response = str(response.json())
+        response_one = str(response.replace("'", '"'))
+        response_one = str(response_one.replace("None", '"Null"'))
+        data = json.loads(response_one)
+        for item in data['cinemas']:
+            IDC = str(item['id'])
             count = 0
             limit = 3
-            url = 'https://api.themoviedb.org/3/movie/popular?' 
-            locality = region.replace(' ', '%20')
-            final_url = url + 'api_key=' + api_key + '&language=en-US&page=1&region=' + locality 
-            response = urllib.request.urlopen(final_url).read() 
-            json_obj = str(response, 'utf-8')
-            data = json.loads(json_obj) 
-            print("The first three most popular movies now:")
-            time.sleep(1.5)
-            for item in data['results']:
-                print (str(count+1),".","Title:","",item['original_title'],"\n","Overview:","",item['overview'],"\n","Release date:","",item['release_date'])  
-                print(" ")
-                time.sleep(1.5)
-                count += 1
-                if count == limit:
-                    break
-        else:
-            print("Not a country!")
-locu_search(input("What is your region? "))
-#gives the first three most popular movies  
+            user_cin = int(input("For which cinema do you want more information (pick a number)? "))
+            if user_cin == 1:
+                cinemaID = IDC
+                print(cinemaID)  
+                try:
+                    response = requests.get(
+                        url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaID,
+                        params={
+                            "countries": "GB",
+                        },
+                        headers={
+                            "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+                        },
+                    )
+                    response = str(response.json())
+                    response_one = str(response.replace("'", '"'))
+                    response_one = str(response_one.replace("None", '"Null"'))                
+                    data = json.loads(response_one)
+                    for item in data['movies']:
+                        print (str(count+1),".","Title:","",item['title'],"\n","Image:","",item['poster_image_thumbnail'])  
+                        print(" ")
+                        time.sleep(1.5)
+                        count += 1
+                        if count == limit:
+                            break
+            #print("For which cinema do you want more information (pick a number)? ")
+            #user_cin = input().int()
+                           
+                except requests.exceptions.RequestException:
+                    print('HTTP Request failed')
+        
+        
+            #print (str(count+1),".","Name:","",item['name'],"\n","Telephone:","",item['telephone'])  
+            #print(" ")
+            #time.sleep(1.5)
+            count += 1
+            if count == limit:
+                break
+    except requests.exceptions.RequestException:
+        print('HTTP Request failed')
+send_request("33223")
+### Not finished
