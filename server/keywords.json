@@ -76,4 +76,15 @@
     [
       "celery"
     ]
+    ,"time":
+    [
+      "tomorrow"
+    ]
+    ,"location":
+    [
+      "in",
+      "at"
+      "near"
+      "by"
+    ]
 }
