@@ -100,10 +100,6 @@ class server(object):
         elif rand == 3: celerystring = "Generating nude Tayne"
         return celerystring
 
-    def encrypt(self, rawData, key):
-        aesObject = AES.new(key, AES.MODE_CBC, )
-        encryptedData = aesObject.encrypt(rawData)
-
 def getArgs():
     ''' getArgs returns all program arguments '''
     parser = argparse.ArgumentParser(description='') # Add description
