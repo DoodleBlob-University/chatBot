@@ -65,7 +65,7 @@ class server(object):
         keysFound = self.searchJSON(receivedStr)
         ## add cure if statment here please
         if 'curse' in keysFound:
-            return aesObject.encrypt("Please watch your language, you absolute ****!")
+            return aesObject.encrypt("Please watch your language.")
         elif 'weather' in keysFound:
             return aesObject.encrypt("You are talking about weather")
         elif 'cinema' in keysFound:
