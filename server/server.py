@@ -8,6 +8,7 @@ import json
 import netifaces
 import requests
 from aes import AESEncryption
+from weather import weather
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
@@ -67,7 +68,8 @@ class server(object):
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language, you absolute ****!")
         elif 'weather' in keysFound:
-            return aesObject.encrypt("You are talking about weather")
+            weatherData = weather(None, {'latitude': '37.8267', 'longitude': '122.4233'})
+            return aesObject.encrypt(str(weatherData.forcastRequest(weatherData.url)['currently']['temperature']))
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
         elif 'celery' in keysFound:
@@ -82,7 +84,7 @@ class server(object):
 
     def searchJSON(self, recievedStr):
         ''' Gets JSON data from a webpage - the git repo '''
-        request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3f6uTRxnnISwgawNP_h741zJFpLbks5aBGZXwA%3D%3D')
+        request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3ThGw6uhWhM5ZVa6ddmuniG9HgTMks5aEprPwA%3D%3D')
         jsonData = request.json()
         recievedList = recievedStr.split(" ")
         keysFound = []
