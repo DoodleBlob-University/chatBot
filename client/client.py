@@ -37,7 +37,11 @@ def main():
     args = getArgs()
     drawHeader()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((args.address, args.port))
+    try:
+        sock.connect((args.address, args.port))
+    except ConnectionRefusedError:
+        print("Cannot connect to server.\nPlease try again later...")
+        exit()
     while True:
         messageData = input('>> ')
         if messageData.lower() == 'exit':
@@ -51,7 +55,12 @@ def main():
             aesObject = AESEncryption(args.key)
             sock.sendall(aesObject.encrypt(messageData))
             receivedData = sock.recv(1024)
-            print(aesObject.decrypt(receivedData))
+            try:
+                print(aesObject.decrypt(receivedData))
+            except ValueError:
+                print("An error has occured.\nPlease restart the client.\nIf using custom AES keys, please ensure they are the same for both server and client.")
+                exit()
+
 
 if __name__ == '__main__':
     main()
