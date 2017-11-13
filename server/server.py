@@ -51,7 +51,7 @@ class server(object):
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
                     receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"").replace('.',"")
-                    client.sendall(self.formResponse(receivedStr, self.key))
+                    client.sendall(self.formResponse(receivedStr, self.key, clientAddress))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
@@ -61,14 +61,20 @@ class server(object):
                 client.close()
                 return False
 
-    def formResponse(self, receivedStr, key):
+    def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
         keysFound = self.searchJSON(receivedStr)
         ## add cure if statment here please
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language, you absolute ****!")
         elif 'weather' in keysFound:
-            weatherData = weather(None, {'latitude': '37.8267', 'longitude': '122.4233'})
+            if 'location' not in keysFound:
+                clientIpData = self.getIpData(clientAddress)
+                if 'time' in keysFound:
+                    weatherData = weather(None, {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']})
+                else:
+                    weatherData = weather(None, {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']})
+
             return aesObject.encrypt(str(weatherData.forcastRequest(weatherData.url)['currently']['temperature']))
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
@@ -84,9 +90,9 @@ class server(object):
 
     def searchJSON(self, recievedStr):
         ''' Gets JSON data from a webpage - the git repo '''
-        #request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3ThGw6uhWhM5ZVa6ddmuniG9HgTMks5aEprPwA%3D%3D')
-        #jsonData = request.json()
-        jsonData = json.load(open('keywords.json'))
+        request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3ThGw6uhWhM5ZVa6ddmuniG9HgTMks5aEprPwA%3D%3D')
+        jsonData = request.json()
+        #jsonData = json.load(open("keywords.json", "r"))
         recievedList = recievedStr.split(" ")
         keysFound = []
         for key in jsonData:
