@@ -70,12 +70,12 @@ class server(object):
         elif 'weather' in keysFound:
             if 'location' not in keysFound:
                 clientIpData = self.getIpData(clientAddress)
-                if 'time' in keysFound:
-                    weatherData = weather(None, {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']})
-                else:
-                    weatherData = weather(None, {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']})
-
-            return aesObject.encrypt(str(weatherData.forcastRequest(weatherData.url)['currently']['temperature']))
+                location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
+                weatherData = weather(None, location)
+                forcastRequest = weatherData.forcastRequest(weatherData.url)
+                return aesObject.encrypt('It is currently {} and the temperature is {}'.format(forcastRequest['currently']['summary'],str(forcastRequest['currently']['temperature'])))
+            else:
+                pass 
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
         elif 'celery' in keysFound:
@@ -90,8 +90,6 @@ class server(object):
 
     def searchJSON(self, recievedStr):
         ''' Gets JSON data from a webpage - the git repo '''
-        #request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3ThGw6uhWhM5ZVa6ddmuniG9HgTMks5aEprPwA%3D%3D')
-        #jsonData = request.json()
         jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
         keysFound = []
