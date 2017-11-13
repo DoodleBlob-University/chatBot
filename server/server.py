@@ -92,8 +92,7 @@ class server(object):
         ''' Gets JSON data from a webpage - the git repo '''
         #request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3ThGw6uhWhM5ZVa6ddmuniG9HgTMks5aEprPwA%3D%3D')
         #jsonData = request.json()
-        with open('keywords.json', encoding='utf-8') as data_file:
-            jsonData = json.loads(data_file.read())
+        jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
         keysFound = []
         for key in jsonData:
