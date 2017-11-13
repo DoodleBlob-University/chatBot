@@ -90,9 +90,16 @@ class server(object):
 
     def searchJSON(self, recievedStr):
         ''' Gets JSON data from a webpage - the git repo '''
+<<<<<<< HEAD
         request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3ThGw6uhWhM5ZVa6ddmuniG9HgTMks5aEprPwA%3D%3D')
         jsonData = request.json()
         #jsonData = json.load(open("keywords.json", "r"))
+=======
+        #request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3ThGw6uhWhM5ZVa6ddmuniG9HgTMks5aEprPwA%3D%3D')
+        #jsonData = request.json()
+        with open('keywords.json', encoding='utf-8') as data_file:
+            jsonData = json.loads(data_file.read())
+>>>>>>> 927c7660223cd0e66e59e5a1c3391202bddeeb0b
         recievedList = recievedStr.split(" ")
         keysFound = []
         for key in jsonData:
