@@ -9,6 +9,11 @@ class testServer(unittest.TestCase):
     def test_getIpData(self):
         self.assertEqual(self.server.getIpData('8.8.8.8')['status'], 'success')
         self.assertEqual(self.server.getIpData('')['status'], 'success')
+        self.assertEqual(self.server.getIpData('127.0.0.1')['status'], 'success')
+
+    def test_searchJSON(self):
+        self.assertEqual(self.server.searchJSON('Hi what is the weather today ?'), ['weather', 'time'])
+        self.assertEqual(self.server.searchJSON('Is it going to rain today ?'), ['weather', 'time'])
 
 class TestAES(unittest.TestCase):
 
