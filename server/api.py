@@ -13,29 +13,9 @@ if __name__ == '__main__':
 
 print("What is your postcode? ")
 post_code = input().lower()
-def cinemaSearch():
-    """This function takes a postcode as input and gives the first three closest cinemas as output"""
-    count = 0
-    limit = 3
-    url = 'http://api.cinelist.co.uk/search/cinemas/postcode/' 
-    locality = post_code.replace(' ', '%20')
-    final_url = url + locality 
-    response = urllib.request.urlopen(final_url).read() 
-    json_obj = str(response, 'utf-8')
-    data = json.loads(json_obj) 
-    print("Searching. Please wait... ")
-    time.sleep(1.5)
-    for item in data['cinemas']:
-        print (str(count+1),".","Cinema name: ",item['name'], "\n"," ","Distance:",item['distance'], "miles")   
-        print(" ")
-        time.sleep(1.5)
-        count += 1
-        if count == limit:
-            break
-cinemaSearch()
 
 def findLocation():
-    """This function use the postcode from the previous function and gives the location as an output, but do not print it"""
+    """This function use a postcode and gives the location as an output, but do not print it."""
     #https://api.getaddress.io/find/" + post_code + "?api-key=yKq60w4JvkuDFJUgGjtHjg11049
     try:
         response = requests.get(
@@ -46,23 +26,23 @@ def findLocation():
         response_one = str(response.replace("'", '"'))
         response_one = str(response_one.replace("None", '"Null"'))
         data = json.loads(response_one)
-        longlat.append(round(data['latitude'], 1))
-        longlat.append(round(data['longitude'], 1))
+        longlat.append(round(data['latitude'], 3))
+        longlat.append(round(data['longitude'], 3))
         return(longlat)
     except requests.exceptions.RequestException:
         print('HTTP Request failed') 
 findLocation()
 
-def cinemaID():
-    """This function takes the location from the previous one as input and gives 
-    all information about the closest cinemas as output but do not print it to the user"""
+def cinemaSearch():
+    """This function takes the location from the previous one as an input and prints
+    the first five closest cinemas in a radius of 3,5 miles."""
     longlat = list(findLocation())
     count = 0
-    limit = 1
+    limit = 5
     #https://api.internationalshowtimes.com/v4/cinemas/?location=52.5,13.37&distance=1000
     try:
         response = requests.get(
-            url="https://api.internationalshowtimes.com/v4/cinemas/?location=" + str(longlat[0]) + "," + str(longlat[1]) + "&distance=18",
+            url="https://api.internationalshowtimes.com/v4/cinemas/?location=" + str(longlat[0]) + "," + str(longlat[1]) + "&distance=3.5",
             params={
                 "countries": "GB",
             },
@@ -72,8 +52,52 @@ def cinemaID():
         )
         response = str(response.json())
         response_one = str(response.replace("'", '"'))
-        response_one = str(response_one.replace("None", '"Null"'))
-        data = json.loads(response_one)
+        response_one = str(response_one.replace('"s ',"'s "))
+        response_one = str(response_one.replace('"s, ',"'s, "))
+        response_one = str(response_one.replace('"s.',"'s."))
+        response_one = str(response_one.replace('"t ',"'t "))
+        response_one = str(response_one.replace('"t, ',"'t, "))
+        response_one1 = str(response_one.replace("None", '"Null"'))
+        data = json.loads(response_one1)
+        print("Searching. Please wait... ")
+        time.sleep(1.5)
+        for item in data['cinemas']:
+            print (str(count+1),".","Cinema name: ",item['name'])   
+            print(" ")
+            time.sleep(0.8)
+            count += 1
+            if count == limit:
+                break 
+    except requests.exceptions.RequestException:
+        print('HTTP Request failed')
+cinemaSearch()
+
+def cinemaID():
+    """This function takes the location from the first function as input and gives 
+    all information about the closest cinemas as output but do not print it to the user."""
+    longlat = list(findLocation())
+    count = 0
+    limit = 5
+    #https://api.internationalshowtimes.com/v4/cinemas/?location=52.5,13.37&distance=1000
+    try:
+        response = requests.get(
+            url="https://api.internationalshowtimes.com/v4/cinemas/?location=" + str(longlat[0]) + "," + str(longlat[1]) + "&distance=3.5",
+            params={
+                "countries": "GB",
+            },
+            headers={
+                "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+            },
+        )
+        response = str(response.json())
+        response_one = str(response.replace("'", '"'))
+        response_one = str(response_one.replace('"s ',"'s "))
+        response_one = str(response_one.replace('"s, ',"'s, "))
+        response_one = str(response_one.replace('"s.',"'s."))
+        response_one = str(response_one.replace('"t ',"'t "))
+        response_one = str(response_one.replace('"t, ',"'t, "))
+        response_one1 = str(response_one.replace("None", '"Null"'))
+        data = json.loads(response_one1)
         IDC = []
         count1 = 0
         for item in data['cinemas']:
@@ -82,8 +106,9 @@ def cinemaID():
             IDC.append(str(item['website']))
             IDC.append(str(item['name']))
             count1 += 1
-            if count1 > 5:
+            if count1 > 8:
                 break  
+        print(IDC)
         return (IDC)
     except requests.exceptions.RequestException:
         print('HTTP Request failed')
@@ -92,15 +117,15 @@ cinemaID()
 user_cin = int(input("For which cinema do you want more information (pick a number)? "))
 def showTime(IDC):
     """This function is using information from the previous function 
-    as input and present to the user all the iformation and the showtime asoutput"""
+    as input and present to the user all the iformation for the selected cinema and the showtime."""
     cinemaIDlist = list(IDC)
     print("Loading...")
     time.sleep(1.5)
     print(" ")
-    if user_cin == 1:
+    if user_cin == 1:   
         try:
             response = requests.get(
-                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[8],
+                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[0],
                 params={
                     "countries": "GB",
                 },
@@ -113,11 +138,12 @@ def showTime(IDC):
             response = str(response.json())
             response_one = str(response.replace("'", '"'))
             response_one = str(response_one.replace('"s ',"'s "))
+            response_one = str(response_one.replace('"t ',"'t "))
             response_one1 = str(response_one.replace("None", '"Null"'))
             data = json.loads(response_one1)
-            print('Cinema name: ' + str(cinemaIDlist[11]))
-            print('Telepehone: ' + str(cinemaIDlist[9]))
-            print('Website: ' + str(cinemaIDlist[10]))
+            print('Cinema name: ' + str(cinemaIDlist[3]))
+            print('Telepehone: ' + str(cinemaIDlist[1]))
+            print('Website: ' + str(cinemaIDlist[2]))
             print("")
             print("Showtime for this cinema:")
             for item in data['movies']:
@@ -145,6 +171,7 @@ def showTime(IDC):
             response = str(response.json())
             response_one = str(response.replace("'", '"'))
             response_one = str(response_one.replace('"s ',"'s "))
+            response_one = str(response_one.replace('"t ',"'t "))
             response_one1 = str(response_one.replace("None", '"Null"'))
             data = json.loads(response_one1)
             print('Cinema name: ' + str(cinemaIDlist[7]))
@@ -164,6 +191,72 @@ def showTime(IDC):
     elif user_cin == 3:
         try:
             response = requests.get(
+                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[8],
+                params={
+                    "countries": "GB",
+                },
+                headers={
+                    "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+                },
+            )
+            countnew = 0
+            limitnew = 5
+            response = str(response.json())
+            response_one = str(response.replace("'", '"'))
+            response_one = str(response_one.replace('"s ',"'s "))
+            response_one = str(response_one.replace('"t ',"'t "))            
+            response_one1 = str(response_one.replace("None", '"Null"'))
+            data = json.loads(response_one1)
+            print('Cinema name: ' + str(cinemaIDlist[11]))
+            print('Telepehone: ' + str(cinemaIDlist[9]))
+            print('Website: ' + str(cinemaIDlist[10]))
+            print("")
+            print("Showtime for this cinema:")
+            for item in data['movies']:
+                print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
+                print(" ")
+                time.sleep(0.8)
+                countnew += 1
+                if countnew == limitnew:
+                    break
+        except requests.exceptions.RequestException:
+            print('HTTP Request failed')       
+    elif user_cin == 4:
+        try:
+            response = requests.get(
+                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[12],
+                params={
+                    "countries": "GB",
+                },
+                headers={
+                    "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+                },
+            )
+            countnew = 0
+            limitnew = 5
+            response = str(response.json())
+            response_one = str(response.replace("'", '"'))
+            response_one = str(response_one.replace('"s ',"'s "))
+            response_one = str(response_one.replace('"t ',"'t "))
+            response_one1 = str(response_one.replace("None", '"Null"'))
+            data = json.loads(response_one1)
+            print('Cinema name: ' + str(cinemaIDlist[15]))
+            print('Telepehone: ' + str(cinemaIDlist[13]))
+            print('Website: ' + str(cinemaIDlist[14]))
+            print("")
+            print("Showtime for this cinema:")
+            for item in data['movies']:
+                print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
+                print(" ")
+                time.sleep(0.8)
+                countnew += 1
+                if countnew == limitnew:
+                    break
+        except requests.exceptions.RequestException:
+            print('HTTP Request failed') 
+    elif user_cin == 5:
+        try:
+            response = requests.get(
                 url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[16],
                 params={
                     "countries": "GB",
@@ -177,9 +270,10 @@ def showTime(IDC):
             response = str(response.json())
             response_one = str(response.replace("'", '"'))
             response_one = str(response_one.replace('"s ',"'s "))
+            response_one = str(response_one.replace('"t ',"'t "))
             response_one1 = str(response_one.replace("None", '"Null"'))
             data = json.loads(response_one1)
-            print('Cinema name: ' + str(cinemaIDlist[7]))
+            print('Cinema name: ' + str(cinemaIDlist[19]))
             print('Telepehone: ' + str(cinemaIDlist[17]))
             print('Website: ' + str(cinemaIDlist[18]))
             print("")
@@ -192,7 +286,8 @@ def showTime(IDC):
                 if countnew == limitnew:
                     break
         except requests.exceptions.RequestException:
-            print('HTTP Request failed')       
+            print('HTTP Request failed') 
+            
 showTime(cinemaID())
 print("Thank you! Have a nice day!")
 exit = input("Press enter!")
