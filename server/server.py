@@ -47,7 +47,7 @@ class server(object):
         ''' receiveFromClient handles incoming data from clients '''
         byteSize = 1024
         while True:
-            try:
+            #try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
@@ -57,15 +57,15 @@ class server(object):
                     print('** Client Disconnected {}'.format(clientAddress))#when client disconnects
                     client.close()
                     return False
-            except Exception as e:#any exception in server.py
-                print("{} - Disconnecting {}\n".format(e, clientAddress))
-                client.close()
-                return False
+            #except Exception as e:#any exception in server.py
+            #    print("{} - Disconnecting {}\n".format(e, clientAddress))
+            #    client.close()
+            #    return False
 
     def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
         keysFound, wordLocation = self.searchJSON(receivedStr)
-
+        # IF ONLY PYTHON HAD SWITCH STATEMENTS
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language, you absolute ****!")
         elif 'weather' in keysFound:
@@ -84,6 +84,10 @@ class server(object):
                 return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(forcastRequest['currently']['summary'],wordLocation.capitalize(),str(forcastRequest['currently']['temperature'])))
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
+        elif 'ipinfo' in keysFound:
+            query = self.getIpData(clientAddress)['query']
+            isp = self.getIpData(clientAddress)['isp']
+            return aesObject.encrypt("Your IP is {}, provided by {}.".format(query, isp))
         elif 'celery' in keysFound:
             return aesObject.encrypt(self.celery())
         else:
