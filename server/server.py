@@ -19,6 +19,7 @@ class server(object):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.hostIP, self.hostPort))
+        self.googleApiKey = 'AIzaSyDiqfHUyzaaCEPr2gF04NPFyhR7Iew30vs'
         print('** server started on\n** internal - {}:{}\n** external - {}:{}\n'.format(self.getServerIP()['internal'], self.hostPort,self.getServerIP()['external'] ,self.hostPort))
 
     def serverListen(self):
@@ -46,7 +47,7 @@ class server(object):
         ''' receiveFromClient handles incoming data from clients '''
         byteSize = 1024
         while True:
-            try:
+            #try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
@@ -56,10 +57,10 @@ class server(object):
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
-            except Exception as e:
-                print("{} - Disconnecting {}\n".format(e, clientAddress))
-                client.close()
-                return False
+            #except Exception as e:
+            #    print("{} - Disconnecting {}\n".format(e, clientAddress))
+            #    client.close()
+            #    return False
 
     def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
@@ -76,16 +77,23 @@ class server(object):
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
                 return aesObject.encrypt('It is currently {} and the temperature is {}'.format(forcastRequest['currently']['summary'],str(forcastRequest['currently']['temperature'])))
             else:
-
-                return aesObject.encrypt("You want to know the weather in {}, right?".format(wordLocation))
-
-
+                lat, lng = self.getLocationCoords(wordLocation, "UK")
+                location = {'latitude': lat, 'longitude': lng}
+                weatherData = weather(None, location)
+                forcastRequest = weatherData.forcastRequest(weatherData.url)
+                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(forcastRequest['currently']['summary'],wordLocation.capitalize(),str(forcastRequest['currently']['temperature'])))
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
         elif 'celery' in keysFound:
             return aesObject.encrypt(self.celery())
         else:
             return aesObject.encrypt("Sorry, I don't understand what you are talking about.")
+
+    def getLocationCoords(self, location, country):
+        url = 'https://maps.googleapis.com/maps/api/geocode/json?address=+{}+{}&key={}'.format(location, country, self.googleApiKey)
+        request = requests.get(url)
+        placeinfo = request.json()
+        return placeinfo['results'][0]['geometry']['location']['lat'], placeinfo['results'][0]['geometry']['location']['lng']
 
     def getServerIP(self):
         ''' returns servers internal and external ip address '''
