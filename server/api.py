@@ -11,15 +11,36 @@ def apiCall(apiURL):
 if __name__ == '__main__':
     pass ## add tests here
 
-print("What is your postcode? ")
-post_code = input().lower()
+def checkPostcode():
+    """This function takes a postcode as an inpit and check it is valid or not"""
+    #https://api.postcodes.io/postcodes//validate
+    post_code1 = []
+    while True:
+        try:
+            print("What is your postcode? ")
+            post_code = input().lower()
+            response = requests.get(
+                url="https://api.postcodes.io/postcodes/" + post_code + "/validate",
+            )
+            response = str(response.json())
+            response_one = str(response.replace("'", '"'))
+            response_one = str(response.replace("True", '"True"'))
+            response_one = str(response_one.replace("'", '"'))
+            data = json.loads(response_one)
+            if data["result"] == "True":
+                break
+        except ValueError:
+            print("Worng postcode! Pleace try again...")
+    return(post_code)
 
+post_code1 = checkPostcode()
 def findLocation():
     """This function use a postcode and gives the location as an output, but do not print it."""
     #https://api.getaddress.io/find/" + post_code + "?api-key=yKq60w4JvkuDFJUgGjtHjg11049
+    post_code = post_code1
     try:
         response = requests.get(
-            url="https://api.getaddress.io/find/" + post_code + "?api-key=TQoCHFHv8EeFKg8CXzXISQ11057",
+            url="https://api.getaddress.io/find/" + post_code + "?api-key=hLpgUfHQU0eAculh2semoQ11095",
         )
         longlat = []
         response = str(response.json())
@@ -31,7 +52,6 @@ def findLocation():
         return(longlat)
     except requests.exceptions.RequestException:
         print('HTTP Request failed') 
-findLocation()
 
 def cinemaSearch():
     """This function takes the location from the previous one as an input and prints
@@ -108,12 +128,10 @@ def cinemaID():
             count1 += 1
             if count1 > 8:
                 break  
-        print(IDC)
         return (IDC)
     except requests.exceptions.RequestException:
         print('HTTP Request failed')
-cinemaID()
-
+        
 user_cin = int(input("For which cinema do you want more information (pick a number)? "))
 def showTime(IDC):
     """This function is using information from the previous function 
@@ -122,172 +140,180 @@ def showTime(IDC):
     print("Loading...")
     time.sleep(1.5)
     print(" ")
-    if user_cin == 1:   
-        try:
-            response = requests.get(
-                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[0],
-                params={
-                    "countries": "GB",
-                },
-                headers={
-                    "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
-                },
-            )
-            countnew = 0
-            limitnew = 5
-            response = str(response.json())
-            response_one = str(response.replace("'", '"'))
-            response_one = str(response_one.replace('"s ',"'s "))
-            response_one = str(response_one.replace('"t ',"'t "))
-            response_one1 = str(response_one.replace("None", '"Null"'))
-            data = json.loads(response_one1)
-            print('Cinema name: ' + str(cinemaIDlist[3]))
-            print('Telepehone: ' + str(cinemaIDlist[1]))
-            print('Website: ' + str(cinemaIDlist[2]))
-            print("")
-            print("Showtime for this cinema:")
-            for item in data['movies']:
-                print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
-                print(" ")
-                time.sleep(0.8)
-                countnew += 1
-                if countnew == limitnew:
-                    break
-        except requests.exceptions.RequestException:
-            print('HTTP Request failed')
-    elif user_cin == 2:
-        try:
-            response = requests.get(
-                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[4],
-                params={
-                    "countries": "GB",
-                },
-                headers={
-                    "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
-                },
-            )
-            countnew = 0
-            limitnew = 5
-            response = str(response.json())
-            response_one = str(response.replace("'", '"'))
-            response_one = str(response_one.replace('"s ',"'s "))
-            response_one = str(response_one.replace('"t ',"'t "))
-            response_one1 = str(response_one.replace("None", '"Null"'))
-            data = json.loads(response_one1)
-            print('Cinema name: ' + str(cinemaIDlist[7]))
-            print('Telepehone: ' + str(cinemaIDlist[5]))
-            print('Website: ' + str(cinemaIDlist[6]))
-            print("")
-            print("Showtime for this cinema:")
-            for item in data['movies']:
-                print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
-                print(" ")
-                time.sleep(0.8)
-                countnew += 1
-                if countnew == limitnew:
-                    break
-        except requests.exceptions.RequestException:
-            print('HTTP Request failed') 
-    elif user_cin == 3:
-        try:
-            response = requests.get(
-                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[8],
-                params={
-                    "countries": "GB",
-                },
-                headers={
-                    "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
-                },
-            )
-            countnew = 0
-            limitnew = 5
-            response = str(response.json())
-            response_one = str(response.replace("'", '"'))
-            response_one = str(response_one.replace('"s ',"'s "))
-            response_one = str(response_one.replace('"t ',"'t "))            
-            response_one1 = str(response_one.replace("None", '"Null"'))
-            data = json.loads(response_one1)
-            print('Cinema name: ' + str(cinemaIDlist[11]))
-            print('Telepehone: ' + str(cinemaIDlist[9]))
-            print('Website: ' + str(cinemaIDlist[10]))
-            print("")
-            print("Showtime for this cinema:")
-            for item in data['movies']:
-                print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
-                print(" ")
-                time.sleep(0.8)
-                countnew += 1
-                if countnew == limitnew:
-                    break
-        except requests.exceptions.RequestException:
-            print('HTTP Request failed')       
-    elif user_cin == 4:
-        try:
-            response = requests.get(
-                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[12],
-                params={
-                    "countries": "GB",
-                },
-                headers={
-                    "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
-                },
-            )
-            countnew = 0
-            limitnew = 5
-            response = str(response.json())
-            response_one = str(response.replace("'", '"'))
-            response_one = str(response_one.replace('"s ',"'s "))
-            response_one = str(response_one.replace('"t ',"'t "))
-            response_one1 = str(response_one.replace("None", '"Null"'))
-            data = json.loads(response_one1)
-            print('Cinema name: ' + str(cinemaIDlist[15]))
-            print('Telepehone: ' + str(cinemaIDlist[13]))
-            print('Website: ' + str(cinemaIDlist[14]))
-            print("")
-            print("Showtime for this cinema:")
-            for item in data['movies']:
-                print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
-                print(" ")
-                time.sleep(0.8)
-                countnew += 1
-                if countnew == limitnew:
-                    break
-        except requests.exceptions.RequestException:
-            print('HTTP Request failed') 
-    elif user_cin == 5:
-        try:
-            response = requests.get(
-                url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[16],
-                params={
-                    "countries": "GB",
-                },
-                headers={
-                    "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
-                },
-            )
-            countnew = 0
-            limitnew = 5
-            response = str(response.json())
-            response_one = str(response.replace("'", '"'))
-            response_one = str(response_one.replace('"s ',"'s "))
-            response_one = str(response_one.replace('"t ',"'t "))
-            response_one1 = str(response_one.replace("None", '"Null"'))
-            data = json.loads(response_one1)
-            print('Cinema name: ' + str(cinemaIDlist[19]))
-            print('Telepehone: ' + str(cinemaIDlist[17]))
-            print('Website: ' + str(cinemaIDlist[18]))
-            print("")
-            print("Showtime for this cinema:")
-            for item in data['movies']:
-                print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
-                print(" ")
-                time.sleep(0.8)
-                countnew += 1
-                if countnew == limitnew:
-                    break
-        except requests.exceptions.RequestException:
-            print('HTTP Request failed') 
+    while True:
+        user_cin = int(input("For which cinema do you want more information (pick a number)? "))
+        if user_cin == 1:   
+            try:
+                response = requests.get(
+                    url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[0],
+                    params={
+                        "countries": "GB",
+                    },
+                    headers={
+                        "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+                    },
+                )
+                countnew = 0
+                limitnew = 5
+                response = str(response.json())
+                response_one = str(response.replace("'", '"'))
+                response_one = str(response_one.replace('"s ',"'s "))
+                response_one = str(response_one.replace('"t ',"'t "))
+                response_one1 = str(response_one.replace("None", '"Null"'))
+                data = json.loads(response_one1)
+                print('Cinema name: ' + str(cinemaIDlist[3]))
+                print('Telepehone: ' + str(cinemaIDlist[1]))
+                print('Website: ' + str(cinemaIDlist[2]))
+                print("")
+                print("Showtime for this cinema:")
+                for item in data['movies']:
+                    print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
+                    print(" ")
+                    time.sleep(0.8)
+                    countnew += 1
+                    if countnew == limitnew:
+                        break
+            except requests.exceptions.RequestException:
+                print('HTTP Request failed')
+        elif user_cin == 2:
+            try:
+                response = requests.get(
+                    url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[4],
+                    params={
+                        "countries": "GB",
+                    },
+                    headers={
+                        "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+                    },
+                )
+                countnew = 0
+                limitnew = 5
+                response = str(response.json())
+                response_one = str(response.replace("'", '"'))
+                response_one = str(response_one.replace('"s ',"'s "))
+                response_one = str(response_one.replace('"t ',"'t "))
+                response_one1 = str(response_one.replace("None", '"Null"'))
+                data = json.loads(response_one1)
+                print('Cinema name: ' + str(cinemaIDlist[7]))
+                print('Telepehone: ' + str(cinemaIDlist[5]))
+                print('Website: ' + str(cinemaIDlist[6]))
+                print("")
+                print("Showtime for this cinema:")
+                for item in data['movies']:
+                    print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
+                    print(" ")
+                    time.sleep(0.8)
+                    countnew += 1
+                    if countnew == limitnew:
+                        break
+            except requests.exceptions.RequestException:
+                print('HTTP Request failed') 
+        elif user_cin == 3:
+            try:
+                response = requests.get(
+                    url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[8],
+                    params={
+                        "countries": "GB",
+                    },
+                    headers={
+                        "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+                    },
+                )
+                countnew = 0
+                limitnew = 5
+                response = str(response.json())
+                response_one = str(response.replace("'", '"'))
+                response_one = str(response_one.replace('"s ',"'s "))
+                response_one = str(response_one.replace('"t ',"'t "))            
+                response_one1 = str(response_one.replace("None", '"Null"'))
+                data = json.loads(response_one1)
+                print('Cinema name: ' + str(cinemaIDlist[11]))
+                print('Telepehone: ' + str(cinemaIDlist[9]))
+                print('Website: ' + str(cinemaIDlist[10]))
+                print("")
+                print("Showtime for this cinema:")
+                for item in data['movies']:
+                    print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
+                    print(" ")
+                    time.sleep(0.8)
+                    countnew += 1
+                    if countnew == limitnew:
+                        break
+            except requests.exceptions.RequestException:
+                print('HTTP Request failed')       
+        elif user_cin == 4:
+            try:
+                response = requests.get(
+                    url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[12],
+                    params={
+                        "countries": "GB",
+                    },
+                    headers={
+                        "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+                    },
+                )
+                countnew = 0
+                limitnew = 5
+                response = str(response.json())
+                response_one = str(response.replace("'", '"'))
+                response_one = str(response_one.replace('"s ',"'s "))
+                response_one = str(response_one.replace('"t ',"'t "))
+                response_one1 = str(response_one.replace("None", '"Null"'))
+                data = json.loads(response_one1)
+                print('Cinema name: ' + str(cinemaIDlist[15]))
+                print('Telepehone: ' + str(cinemaIDlist[13]))
+                print('Website: ' + str(cinemaIDlist[14]))
+                print("")
+                print("Showtime for this cinema:")
+                for item in data['movies']:
+                    print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
+                    print(" ")
+                    time.sleep(0.8)
+                    countnew += 1
+                    if countnew == limitnew:
+                        break
+            except requests.exceptions.RequestException:
+                print('HTTP Request failed') 
+        elif user_cin == 5:
+            try:
+                response = requests.get(
+                    url="https://api.internationalshowtimes.com/v4/movies/?cinema_id=" + cinemaIDlist[16],
+                    params={
+                        "countries": "GB",
+                    },
+                    headers={
+                        "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
+                    },
+                )
+                countnew = 0
+                limitnew = 5
+                response = str(response.json())
+                response_one = str(response.replace("'", '"'))
+                response_one = str(response_one.replace('"s ',"'s "))
+                response_one = str(response_one.replace('"t ',"'t "))
+                response_one1 = str(response_one.replace("None", '"Null"'))
+                data = json.loads(response_one1)
+                print('Cinema name: ' + str(cinemaIDlist[19]))
+                print('Telepehone: ' + str(cinemaIDlist[17]))
+                print('Website: ' + str(cinemaIDlist[18]))
+                print("")
+                print("Showtime for this cinema:")
+                for item in data['movies']:
+                    print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail'])  
+                    print(" ")
+                    time.sleep(0.8)
+                    countnew += 1
+                    if countnew == limitnew:
+                        break
+            except requests.exceptions.RequestException:
+                print('HTTP Request failed') 
+                print("Do you want to see information about another cinema? Y/N")
+                mode = input().lower()
+        if mode == "y":
+            continue
+        else:
+            print("Thank you! Have a nice day!")
+            exit = input("Press enter!")
+            break        
             
 showTime(cinemaID())
-print("Thank you! Have a nice day!")
-exit = input("Press enter!")
