@@ -103,10 +103,13 @@ class server(object):
                 for word in recievedList:
                     if word.lower() == keyword:
                         if key == 'location':
-                            try:
-                                location = recievedList[recievedList.index(word) + 1]
-                                keysFound.append(key)
-                            except:
+                            if 'location' not in keysFound:
+                                try:
+                                    location = recievedList[recievedList.index(word) + 1]
+                                    keysFound.append(key)
+                                except:
+                                    continue
+                            else:
                                 continue
                         else:
                             keysFound.append(key)
