@@ -111,15 +111,15 @@ class server(object):
                 for word in recievedList:
                     if word.lower() == keyword:
                         if key == 'location':
-                            if 'location' not in keysFound:
-                                try:
+                            if 'location' not in keysFound: #if a location keyword has not been found...
+                                try: #gets the next word after "in" or "at" which should be the location
                                     location = recievedList[recievedList.index(word) + 1]
-                                    keysFound.append(key)
-                                except:
+                                    keysFound.append(key)#adds 'Location' to keysFound
+                                except: #if the next word dosent exist and it goes out of bound of the array
                                     continue
-                            else:
+                            else:#if a location keyword has already been found... - ignore all future location keywords
                                 continue
-                        else:
+                        else:#add key to keysFound
                             keysFound.append(key)
                         continue
         return keysFound, location
