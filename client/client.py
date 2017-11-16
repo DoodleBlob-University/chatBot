@@ -6,6 +6,7 @@ import threading
 import argparse
 import os
 import subprocess
+import webbrowser
 from colorama import Fore, Style
 from aes import AESEncryption
 
@@ -56,7 +57,11 @@ def main():
             sock.sendall(aesObject.encrypt(messageData))
             receivedData = sock.recv(1024)
             try:
-                print(aesObject.decrypt(receivedData))
+                receivedStr = aesObject.decrypt(receivedData)
+                if receivedStr[:3] == '/w/':
+                    webbrowser.open(receivedStr[3:])
+                else:
+                    print(receivedStr)
             except ValueError:
                 print("An error has occured.\nPlease restart the client.\nIf using custom AES keys, please ensure they are the same for both server and client.")
                 exit()
