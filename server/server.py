@@ -28,7 +28,7 @@ class server(object):
         while True:
             try:
                 client, clientAddress = self.socket.accept()
-                client.settimeout(120)
+                client.settimeout(300)
                 threading.Thread(target=self.receiveFromClient,args = (client, clientAddress)).start()
                 print('** Client Connected {} - {}'.format(clientAddress, self.getIpData(clientAddress)['city']))
             except:
@@ -36,12 +36,12 @@ class server(object):
 
     def getIpData(self, clientAddress):
         '''gets ip information in json format from ip address'''
-        request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))
+        request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))#gets data about the clients ip
         requestJson = request.json()
-        if requestJson['status'] == 'success':
+        if requestJson['status'] == 'success':#if received succesfully
             return requestJson
         else:
-            return self.getIpData('') #gets the ip for the server as oppose to client - as they should be on the same network
+            return self.getIpData('') #else gets the ip for the server when the client is on the same network
 
     def receiveFromClient(self, client, clientAddress):
         ''' receiveFromClient handles incoming data from clients '''
@@ -54,10 +54,10 @@ class server(object):
                     receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"").replace('.',"")
                     client.sendall(self.formResponse(receivedStr, self.key, clientAddress))
                 else:
-                    print('** Client Disconnected {}'.format(clientAddress))
+                    print('** Client Disconnected {}'.format(clientAddress))#when client disconnects
                     client.close()
                     return False
-            except Exception as e:
+            except Exception as e:#any exception in server.py
                 print("{} - Disconnecting {}\n".format(e, clientAddress))
                 client.close()
                 return False
@@ -65,19 +65,19 @@ class server(object):
     def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
         keysFound, wordLocation = self.searchJSON(receivedStr)
-        print(keysFound)
-        ## add cure if statment here please
+
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language, you absolute ****!")
         elif 'weather' in keysFound:
-            if 'location' not in keysFound:
+            clientIpData = self.getIpData(clientAddress)
+            if 'location' not in keysFound:#if no location is specified
                 clientIpData = self.getIpData(clientAddress)
                 location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
                 weatherData = weather(None, location)
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
                 return aesObject.encrypt('It is currently {} and the temperature is {}'.format(forcastRequest['currently']['summary'],str(forcastRequest['currently']['temperature'])))
-            else:
-                lat, lng = self.getLocationCoords(wordLocation, "UK")
+            else:#when a location is given
+                lat, lng = self.getLocationCoords(wordLocation, clientIpData['countryCode'])#gets longitude and latitude from google geocode
                 location = {'latitude': lat, 'longitude': lng}
                 weatherData = weather(None, location)
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
