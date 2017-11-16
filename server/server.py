@@ -8,6 +8,7 @@ import json
 import netifaces
 import requests
 from aes import AESEncryption
+from weather import weather
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
@@ -18,6 +19,7 @@ class server(object):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.hostIP, self.hostPort))
+        self.googleApiKey = 'AIzaSyDiqfHUyzaaCEPr2gF04NPFyhR7Iew30vs'
         print('** server started on\n** internal - {}:{}\n** external - {}:{}\n'.format(self.getServerIP()['internal'], self.hostPort,self.getServerIP()['external'] ,self.hostPort))
 
     def serverListen(self):
@@ -50,7 +52,7 @@ class server(object):
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
                     receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"").replace('.',"")
-                    client.sendall(self.formResponse(receivedStr, self.key))
+                    client.sendall(self.formResponse(receivedStr, self.key, clientAddress))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
@@ -60,20 +62,38 @@ class server(object):
                 client.close()
                 return False
 
-    def formResponse(self, receivedStr, key):
+    def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
-        keysFound = self.searchJSON(receivedStr)
+        keysFound, wordLocation = self.searchJSON(receivedStr)
+        print(keysFound)
         ## add cure if statment here please
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language.")
         elif 'weather' in keysFound:
-            return aesObject.encrypt("You are talking about weather")
+            if 'location' not in keysFound:
+                clientIpData = self.getIpData(clientAddress)
+                location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
+                weatherData = weather(None, location)
+                forcastRequest = weatherData.forcastRequest(weatherData.url)
+                return aesObject.encrypt('It is currently {} and the temperature is {}'.format(forcastRequest['currently']['summary'],str(forcastRequest['currently']['temperature'])))
+            else:
+                lat, lng = self.getLocationCoords(wordLocation, "UK")
+                location = {'latitude': lat, 'longitude': lng}
+                weatherData = weather(None, location)
+                forcastRequest = weatherData.forcastRequest(weatherData.url)
+                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(forcastRequest['currently']['summary'],wordLocation.capitalize(),str(forcastRequest['currently']['temperature'])))
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
         elif 'celery' in keysFound:
             return aesObject.encrypt(self.celery())
         else:
             return aesObject.encrypt("Sorry, I don't understand what you are talking about.")
+
+    def getLocationCoords(self, location, country):
+        url = 'https://maps.googleapis.com/maps/api/geocode/json?address=+{}+{}&key={}'.format(location, country, self.googleApiKey)
+        request = requests.get(url)
+        placeinfo = request.json()
+        return placeinfo['results'][0]['geometry']['location']['lat'], placeinfo['results'][0]['geometry']['location']['lng']
 
     def getServerIP(self):
         ''' returns servers internal and external ip address '''
@@ -82,17 +102,27 @@ class server(object):
 
     def searchJSON(self, recievedStr):
         ''' Gets JSON data from a webpage - the git repo '''
-        request = requests.get('https://github.coventry.ac.uk/raw/eggintod/chatBot/master/server/keywords.json?token=AAAH3f6uTRxnnISwgawNP_h741zJFpLbks5aBGZXwA%3D%3D')
-        jsonData = request.json()
+        jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
         keysFound = []
+        location = ""
         for key in jsonData:
             for keyword in jsonData[key]:
                 for word in recievedList:
                     if word.lower() == keyword:
-                        keysFound.append(key)
-                        return keysFound
-        return keysFound
+                        if key == 'location':
+                            if 'location' not in keysFound: #if a location keyword has not been found...
+                                try: #gets the next word after "in" or "at" which should be the location
+                                    location = recievedList[recievedList.index(word) + 1]
+                                    keysFound.append(key)#adds 'Location' to keysFound
+                                except: #if the next word dosent exist and it goes out of bound of the array
+                                    continue
+                            else:#if a location keyword has already been found... - ignore all future location keywords
+                                continue
+                        else:#add key to keysFound
+                            keysFound.append(key)
+                        continue
+        return keysFound, location
 
     def celery(self):
         from random import randint
