@@ -12,7 +12,7 @@ if __name__ == '__main__':
     pass ## add tests here
 
 def checkPostcode():
-    """This function takes a postcode as an inpit and check it is valid or not"""
+    """This function takes a postcode as an inpit and check it is valid or not - Mitko Donchev"""
     #https://api.postcodes.io/postcodes//validate
     post_code1 = []
     while True:
@@ -35,7 +35,7 @@ def checkPostcode():
 
 post_code1 = checkPostcode()
 def findLocation():
-    """This function use a postcode and gives the location as an output, but do not print it."""
+    """This function use a postcode and gives the location as an output, but do not print it - Mitko Donchev"""
     #https://api.getaddress.io/find/" + post_code + "?api-key=yKq60w4JvkuDFJUgGjtHjg11049
     post_code = post_code1
     try:
@@ -94,7 +94,7 @@ cinemaSearch()
 
 def cinemaID():
     """This function takes the location from the first function as input and gives 
-    all information about the closest cinemas as output but do not print it to the user."""
+    all information about the closest cinemas as output but do not print it to the user  - Mitko Donchev"""
     longlat = list(findLocation())
     count = 0
     limit = 5
@@ -135,7 +135,7 @@ def cinemaID():
 user_cin = int(input("For which cinema do you want more information (pick a number)? "))
 def showTime(IDC):
     """This function is using information from the previous function 
-    as input and present to the user all the iformation for the selected cinema and the showtime."""
+    as input and present to the user all the iformation for the selected cinema and the showtime  - Mitko Donchev"""
     cinemaIDlist = list(IDC)
     print("Loading...")
     time.sleep(1.5)
