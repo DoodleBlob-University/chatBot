@@ -72,14 +72,14 @@ class server(object):
             clientIpData = self.getIpData(clientAddress)
             if 'location' not in keysFound:#if no location is specified
                 clientIpData = self.getIpData(clientAddress)
-                location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
-                weatherData = weather(None, location)
+                location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}#puts location data from IP in dictionary
+                weatherData = weather(None, location)#weatherData = weather class from weather.py
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
                 return aesObject.encrypt('It is currently {} and the temperature is {}'.format(forcastRequest['currently']['summary'],str(forcastRequest['currently']['temperature'])))
             else:#when a location is given
                 lat, lng = self.getLocationCoords(wordLocation, clientIpData['countryCode'])#gets longitude and latitude from google geocode
-                location = {'latitude': lat, 'longitude': lng}
-                weatherData = weather(None, location)
+                location = {'latitude': lat, 'longitude': lng}#puts into dictionary
+                weatherData = weather(None, location)#weatherData = weather class from weather.py
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
                 return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(forcastRequest['currently']['summary'],wordLocation.capitalize(),str(forcastRequest['currently']['temperature'])))
         elif 'cinema' in keysFound:
