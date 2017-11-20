@@ -166,8 +166,9 @@ class server(object):
                             keysFound.append(key)
                             extraData['time'] = keyword
 
-                        else:#add key to keysFound
-                            keysFound.append(key)
+                        else:
+                            if key not in keysFound:
+                                keysFound.append(key)
                         continue
 
         return keysFound, extraData
