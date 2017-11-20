@@ -72,13 +72,14 @@ class server(object):
             if 'location' not in keysFound:#if no location is specified
                 clientIpData = self.getIpData(clientAddress)
                 location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}#puts location data from IP in dictionary
-                weatherData = weather(None, location)#weatherData = weather class from weather.py
+                weatherData = weather(location)#weatherData = weather class from weather.py
                 return aesObject.encrypt('It is currently {} and the temperature is {}'.format(weatherData.currently['summary'],str(weatherData.currently['temperature'])))
             else:#when a location is given
-                from geoCode import geoCode as location
-                lat, lng = location.getLocationCoords(wordLocation, clientIpData['countryCode'])#gets longitude and latitude from google geocode
+                from geoCode import geoCode
+                geoCode = geoCode()
+                lat, lng = geoCode.getLocationCoords(wordLocation, clientIpData['countryCode'])#gets longitude and latitude from google geocode
                 location = {'latitude': lat, 'longitude': lng}#puts into dictionary
-                weatherData = weather(None, location)#weatherData = weather class from weather.py
+                weatherData = weather(location)#weatherData = weather class from weather.py
                 return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],wordLocation.capitalize(),str(weatherData.currently['temperature'])))
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
@@ -116,10 +117,10 @@ class server(object):
                                     continue
                             else:#if a location keyword has already been found... - ignore all future location keywords
                                 continue
-                        if key == 'time':
-                            time = word
                         else:#add key to keysFound
                             keysFound.append(key)
+                        if key == 'time':
+                            time = keyword
                         continue
         return keysFound, location, time
 
