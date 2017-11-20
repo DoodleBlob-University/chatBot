@@ -5,6 +5,7 @@ import socket
 import threading
 import argparse
 import json
+import datetime
 import netifaces
 import requests
 from aes import AESEncryption
@@ -89,15 +90,17 @@ class server(object):
                 lat, lng = geoCode.getLocationCoords(extraData['location'], clientIpData['countryCode'])#gets longitude and latitude from google geocode
                 location = {'latitude': lat, 'longitude': lng}#puts into dictionary
                 weatherData = weather(location)#weatherData = weather class from weather.py
-                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],wordLocation.capitalize(),str(weatherData.currently['temperature'])))
+                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],extraData['location'].capitalize(),str(weatherData.currently['temperature'])))
             elif 'location' not in keysFound and 'time' in keysFound:
                 clientIpData = self.getIpData(clientAddress)
                 location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
                 weatherData = weather(location)
-                if time == 'daily':
-                    for day in weatherData.daily:
-                        print('day: {}'.format(str(day['summary'])))
-            elif 'lcoation' in keysFound and 'time' in keysFound:
+                if extraData['time'] == 'daily':
+                    response = '{}\n\n'.format(str(weatherData.daily['summary']))
+                    for day in weatherData.daily['data']:
+                        response = response + '{}\n'.format(str(day['summary']))
+                    return aesObject.encrypt(str(response))
+            elif 'location' in keysFound and 'time' in keysFound:
                 pass
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
@@ -159,6 +162,9 @@ class server(object):
         elif rand == 2: celerystring = "4d3d3 engaged"
         elif rand == 3: celerystring = "Generating nude Tayne"
         return celerystring
+
+    def unixTimeToDateTime(self, unixTime):
+        return datetime.datetime.fromtimestamp(int("1284101485")).strftime('%Y-%m-%d %H:%M')
 
 def getArgs():
     ''' getArgs returns all program arguments '''
