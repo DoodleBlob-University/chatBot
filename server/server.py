@@ -53,7 +53,7 @@ class server(object):
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
                     receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"")
-                    client.sendall(self.formResponse(receivedStr, self.key, clientAddress))
+                    client.sendall(aesObject.encrypt(self.formResponse(receivedStr, self.key, clientAddress)))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))#when client disconnects
                     client.close()
@@ -64,33 +64,34 @@ class server(object):
             #    return False
 
     def formResponse(self, receivedStr, key, clientAddress):
-        aesObject = AESEncryption(key)
         keysFound, extraData = self.searchJSON(receivedStr)
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
         if 'curse' in keysFound:
-            return aesObject.encrypt("Please watch your language.")
+            return "Please watch your language."
         elif 'currency' in keysFound:
             if extraData.get('currency') != "":
                 currencyInfo = extraData.get('currency').split(':')
                 currencyData = currency(None)
                 answer = currency.convert(currencyInfo[1],currencyInfo[2],currencyInfo[0])
                 if answer != "":
-                    return aesObject.encrypt("{} {} in {} is {}".format(currencyInfo[0],currencyInfo[1].upper(),currencyInfo[2].upper(),str(answer)))
-            return aesObject.encrypt("Sorry, I can't convert that.")
+                    return "{} {} in {} is {}".format(currencyInfo[0],currencyInfo[1].upper(),currencyInfo[2].upper(),str(answer))
+            return "Sorry, I can't convert that."
+
         elif 'weather' in keysFound:
             clientIpData = self.getIpData(clientAddress)
             if 'location' not in keysFound and 'time' not in keysFound:#if no location is specified
                 clientIpData = self.getIpData(clientAddress)
                 location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}#puts location data from IP in dictionary
                 weatherData = weather(location)#weatherData = weather class from weather.py
-                return aesObject.encrypt('It is currently {} and the temperature is {}'.format(weatherData.currently['summary'],str(weatherData.currently['temperature'])))
+                return 'It is currently {} and the temperature is {}'.format(weatherData.currently['summary'],str(weatherData.currently['temperature']))
+
             elif 'location' in keysFound and 'time' not in keysFound:#when a location is given
                 from geoCode import geoCode
                 geoCode = geoCode()
                 lat, lng = geoCode.getLocationCoords(extraData.get('location'), clientIpData['countryCode'])#gets longitude and latitude from google geocode
                 location = {'latitude': lat, 'longitude': lng}#puts into dictionary
                 weatherData = weather(location)#weatherData = weather class from weather.py
-                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],extraData['location'].capitalize(),str(weatherData.currently['temperature'])))
+                return 'It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],extraData['location'].capitalize(),str(weatherData.currently['temperature']))
             elif 'location' not in keysFound and 'time' in keysFound:
                 clientIpData = self.getIpData(clientAddress)
                 location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
@@ -99,12 +100,12 @@ class server(object):
                     response = 'Daily Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.daily['summary']))
                     for day in weatherData.daily['data']:
                         response = response + '{}:\nSummary: {}\nMax: {} @ {}\nMin: {} @ {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperatureMax'],self.unixTimeToDateTime(day['temperatureMaxTime']),day['temperatureMin'],self.unixTimeToDateTime(day['temperatureMinTime']))
-                    return aesObject.encrypt(response)
+                    return response
                 if extraData['time'] == 'hourly':
                     response = 'Hourly Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.hourly['summary']))
                     for day in weatherData.hourly['data']:
                         response = response + '{}:\nSummary: {}\nTempature: {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperature'])
-                    return aesObject.encrypt(response)
+                    return response
             elif 'location' in keysFound and 'time' in keysFound:
                 from geoCode import geoCode
                 geoCode = geoCode()
@@ -115,23 +116,23 @@ class server(object):
                     response = 'Daily Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.daily['summary']))
                     for day in weatherData.daily['data']:
                         response = response + '{}:\nSummary: {}\nMax: {} @ {}\nMin: {} @ {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperatureMax'],self.unixTimeToDateTime(day['temperatureMaxTime']),day['temperatureMin'],self.unixTimeToDateTime(day['temperatureMinTime']))
-                    return aesObject.encrypt(response)
+                    return response
                 if extraData['time'] == 'hourly':
                     response = 'Hourly Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.hourly['summary']))
                     for day in weatherData.hourly['data']:
                         response = response + '{}:\nSummary: {}\nTempature: {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperature'])
-                    return aesObject.encrypt(response)
+                    return response
         elif 'cinema' in keysFound:
-            return aesObject.encrypt("You are talking about cinema")
+            return "You are talking about cinema"
         elif 'ipinfo' in keysFound:
             query = self.getIpData(clientAddress)['query']
             isp = self.getIpData(clientAddress)['isp']
-            return aesObject.encrypt("Your IP is {}, provided by {}.".format(query, isp))
+            return "Your IP is {}, provided by {}.".format(query, isp)
         elif 'celery' in keysFound:
-            return aesObject.encrypt(self.celery())
+            return self.celery()
         else:
-            return aesObject.encrypt("Sorry, I don't understand what you are talking about.")
-        return aesObject.encrypt('None')
+            return "Sorry, I don't understand what you are talking about."
+        return 'None'
 
     def getServerIP(self):
         ''' returns servers internal and external ip address '''
