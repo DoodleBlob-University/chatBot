@@ -111,12 +111,9 @@ class server(object):
         jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
         keysFound = []
-<<<<<<< HEAD
         location = ''
         time = ''
-=======
         extraData = ""
->>>>>>> eeec9487ad88b20065f577afb8fe7baa4f1f136d
         for key in jsonData:
             for keyword in jsonData[key]:
                 for word in recievedList:
@@ -143,11 +140,7 @@ class server(object):
                         if key == 'time':
                             time = keyword
                         continue
-<<<<<<< HEAD
         return keysFound, location, time
-=======
-        return keysFound, extraData
->>>>>>> eeec9487ad88b20065f577afb8fe7baa4f1f136d
 
     def celery(self):
         from random import randint
