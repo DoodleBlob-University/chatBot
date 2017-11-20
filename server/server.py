@@ -19,7 +19,6 @@ class server(object):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.hostIP, self.hostPort))
-        self.googleApiKey = 'AIzaSyDiqfHUyzaaCEPr2gF04NPFyhR7Iew30vs'
         print('** server started on\n** internal - {}:{}\n** external - {}:{}\n'.format(self.getServerIP()['internal'], self.hostPort,self.getServerIP()['external'] ,self.hostPort))
 
     def serverListen(self):
@@ -77,7 +76,8 @@ class server(object):
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
                 return aesObject.encrypt('It is currently {} and the temperature is {}'.format(forcastRequest['currently']['summary'],str(forcastRequest['currently']['temperature'])))
             else:#when a location is given
-                lat, lng = self.getLocationCoords(wordLocation, clientIpData['countryCode'])#gets longitude and latitude from google geocode
+                from geoCode import geoCode as location
+                lat, lng = location.getLocationCoords(wordLocation, clientIpData['countryCode'])#gets longitude and latitude from google geocode
                 location = {'latitude': lat, 'longitude': lng}#puts into dictionary
                 weatherData = weather(None, location)#weatherData = weather class from weather.py
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
@@ -92,12 +92,6 @@ class server(object):
             return aesObject.encrypt(self.celery())
         else:
             return aesObject.encrypt("Sorry, I don't understand what you are talking about.")
-
-    def getLocationCoords(self, location, country):
-        url = 'https://maps.googleapis.com/maps/api/geocode/json?address=+{}+{}&key={}'.format(location, country, self.googleApiKey)
-        request = requests.get(url)
-        placeinfo = request.json()
-        return placeinfo['results'][0]['geometry']['location']['lat'], placeinfo['results'][0]['geometry']['location']['lng']
 
     def getServerIP(self):
         ''' returns servers internal and external ip address '''
