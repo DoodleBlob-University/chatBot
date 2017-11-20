@@ -145,7 +145,7 @@ class server(object):
 
                         else:#add key to keysFound
                             keysFound.append(key)
-                        if key == 'time':
+                        if key == 'time' and keyword not in extraData:
                             extraData['time'] = keyword
                         continue
         return keysFound, extraData
