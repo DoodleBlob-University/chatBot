@@ -122,22 +122,22 @@ class server(object):
         recievedList = recievedStr.split(" ")
         keysFound = []
         extraData = {}
-        for key in jsonData:
-            for keyword in jsonData[key]:
-                for word in recievedList:
-                    if word.lower() == keyword:
-                        
-                        if key == 'location' and 'location' not in keysFound: #if a location keyword has not been found...
-                            try: #gets the next word after "in" or "at" which should be the location
-                                extraData['location'] = recievedList[recievedList.index(word) + 1]
-                                keysFound.append(key)#adds 'Location' to keysFound
-                            except: #if the next word dosent exist and it goes out of bound of the array
-                                continue
+        for key in jsonData:                        #for each key in jsonData
+            for keyword in jsonData[key]:           #get each keyword from the key
+                for word in recievedList:           #for each word in recievedList
+                    if word.lower() == keyword:     #if said word is a keyword
 
-                        elif key == 'currency' and 'currency' not in keysFound:
-                            keysFound.append(key)
-                            currencyData = currency(recievedStr)
-                            extraData['currency'] = currencyData.inputStr(currencyData.input)
+                        if key == 'location' and 'location' not in keysFound:                           #if the key is 'location', and a location has not yet been found
+                            try:                                                                        #try
+                                extraData['location'] = recievedList[recievedList.index(word) + 1]      #to add the following word to extraData
+                                keysFound.append(key)                                                   #and add the key to keysFound
+                            except:                                                                     #otherwise
+                                continue                                                                #continue
+
+                        elif key == 'currency' and 'currency' not in keysFound:                     #if the key is 'currency', and a currency has not yet been found
+                            keysFound.append(key)                                                   #add the key to keysFound
+                            currencyData = currency(recievedStr)                                    #create an instance of the class 'currency'
+                            extraData['currency'] = currencyData.inputStr(currencyData.input)       #then return the currency conversion and add this to extraData
 
                         elif key == 'time' and 'time' not in keysFound:
                             keysFound.append(key)
