@@ -63,7 +63,7 @@ class server(object):
 
     def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
-        keysFound, wordLocation = self.searchJSON(receivedStr)
+        keysFound, wordLocation, time = self.searchJSON(receivedStr)
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language, you absolute ****!")
@@ -73,15 +73,13 @@ class server(object):
                 clientIpData = self.getIpData(clientAddress)
                 location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}#puts location data from IP in dictionary
                 weatherData = weather(None, location)#weatherData = weather class from weather.py
-                forcastRequest = weatherData.forcastRequest(weatherData.url)
-                return aesObject.encrypt('It is currently {} and the temperature is {}'.format(forcastRequest['currently']['summary'],str(forcastRequest['currently']['temperature'])))
+                return aesObject.encrypt('It is currently {} and the temperature is {}'.format(weatherData.currently['summary'],str(weatherData.currently['temperature'])))
             else:#when a location is given
                 from geoCode import geoCode as location
                 lat, lng = location.getLocationCoords(wordLocation, clientIpData['countryCode'])#gets longitude and latitude from google geocode
                 location = {'latitude': lat, 'longitude': lng}#puts into dictionary
                 weatherData = weather(None, location)#weatherData = weather class from weather.py
-                forcastRequest = weatherData.forcastRequest(weatherData.url)
-                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(forcastRequest['currently']['summary'],wordLocation.capitalize(),str(forcastRequest['currently']['temperature'])))
+                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],wordLocation.capitalize(),str(weatherData.currently['temperature'])))
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
         elif 'ipinfo' in keysFound:
@@ -103,7 +101,8 @@ class server(object):
         jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
         keysFound = []
-        location = ""
+        location = ''
+        time = ''
         for key in jsonData:
             for keyword in jsonData[key]:
                 for word in recievedList:
@@ -117,10 +116,12 @@ class server(object):
                                     continue
                             else:#if a location keyword has already been found... - ignore all future location keywords
                                 continue
+                        if key == 'time':
+                            time = word
                         else:#add key to keysFound
                             keysFound.append(key)
                         continue
-        return keysFound, location
+        return keysFound, location, time
 
     def celery(self):
         from random import randint
