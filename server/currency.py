@@ -12,11 +12,13 @@ class currency(object):
         amount = float(amount)
         curr = requests.get('http://apilayer.net/api/live?access_key=37d9bd361185111f6420d35bdec31f45')
         curr = curr.json()
-        quotes = curr['quotes']
-
-        cFromNum=amount/quotes[cFrom]
-        cToNum = cFromNum*quotes[cTo]
-        return cToNum
+        if curr['success'] == 'true':
+            quotes = curr['quotes']
+            cFromNum=amount/quotes[cFrom]
+            cToNum = cFromNum*quotes[cTo]
+            return cToNum
+        else:
+            return ""
 
     def inputStr(self, input):
         input = input.split(' ')
@@ -25,12 +27,10 @@ class currency(object):
         for word in input:
             if word == "to":
                 try:
-                    response = input[input.index(word)-2] 
+                    response = input[input.index(word)-2]
                     response = str(round(float(response),2))
                     response += ":" + input[input.index(word)-1] + ":"
                     response += input[input.index(word)+1]
-                except Exception as e:
-                    continue
+                except:
+                    response = ""
         return response
-
-

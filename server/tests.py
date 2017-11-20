@@ -1,7 +1,7 @@
 import unittest
 
 class testServer(unittest.TestCase):
-    
+
     def setUp(self):
         from server import server
         self.server = server('', 1143, 'gbaei395y27ny9')
@@ -33,6 +33,15 @@ class TestAES(unittest.TestCase):
 
     def test_encryptdecrypt(self):
         self.assertEqual("Hello World", self.aes.decrypt(self.aes.encrypt("Hello World")))
+
+class TestCurrency(unittest.TestCase):
+
+    def setUp(self):
+        from currency import currency
+
+    def test_checkUSD(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
