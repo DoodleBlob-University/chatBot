@@ -64,12 +64,12 @@ class server(object):
 
     def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
-        keysFound, wordLocation, time = self.searchJSON(receivedStr)
+        keysFound, extraData = self.searchJSON(receivedStr)
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language.")
         elif 'currency' in keysFound:
-            if extraData != "":
+            if extraData['location'] != "":
                 extraData = extraData.split(':')
                 currencyData = currency(None)
                 answer = currency.convert(extraData[1],extraData[2],extraData[0])
@@ -86,7 +86,7 @@ class server(object):
             elif 'location' in keysFound and 'time' not in keysFound:#when a location is given
                 from geoCode import geoCode
                 geoCode = geoCode()
-                lat, lng = geoCode.getLocationCoords(wordLocation, clientIpData['countryCode'])#gets longitude and latitude from google geocode
+                lat, lng = geoCode.getLocationCoords(extraData['location'], clientIpData['countryCode'])#gets longitude and latitude from google geocode
                 location = {'latitude': lat, 'longitude': lng}#puts into dictionary
                 weatherData = weather(location)#weatherData = weather class from weather.py
                 return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],wordLocation.capitalize(),str(weatherData.currently['temperature'])))
@@ -121,9 +121,7 @@ class server(object):
         jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
         keysFound = []
-        location = ''
-        time = ''
-        extraData = ""
+        extraData = {}
         for key in jsonData:
             for keyword in jsonData[key]:
                 for word in recievedList:
@@ -131,7 +129,7 @@ class server(object):
                         if key == 'location':
                             if 'location' not in keysFound: #if a location keyword has not been found...
                                 try: #gets the next word after "in" or "at" which should be the location
-                                    extraData = recievedList[recievedList.index(word) + 1]
+                                    extraData['location'] = recievedList[recievedList.index(word) + 1]
                                     keysFound.append(key)#adds 'Location' to keysFound
                                 except: #if the next word dosent exist and it goes out of bound of the array
                                     continue
@@ -141,16 +139,16 @@ class server(object):
                             if 'currency' not in keysFound:
                                 keysFound.append(key)
                                 currencyData = currency(recievedStr)
-                                extraData = currencyData.inputStr(currencyData.input)
+                                extraData['currency'] = currencyData.inputStr(currencyData.input)
                             else:
                                 continue
 
                         else:#add key to keysFound
                             keysFound.append(key)
                         if key == 'time':
-                            time = keyword
+                            extraData['time'] = keyword
                         continue
-        return keysFound, location, time
+        return keysFound, extraData
 
     def celery(self):
         from random import randint
