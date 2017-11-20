@@ -73,9 +73,9 @@ class server(object):
                 currencyInfo = extraData.get('currency').split(':')
                 currencyData = currency(None)
                 answer = currency.convert(currencyInfo[1],currencyInfo[2],currencyInfo[0])
-                return aesObject.encrypt("{} {} in {} is {}".format(currencyInfo[0],currencyInfo[1].upper(),currencyInfo[2].upper(),str(answer)))
-            else:
-                return aesObject.encrypt("Sorry, I can't convert that.")
+                if answer != "":
+                    return aesObject.encrypt("{} {} in {} is {}".format(currencyInfo[0],currencyInfo[1].upper(),currencyInfo[2].upper(),str(answer)))
+            return aesObject.encrypt("Sorry, I can't convert that.")
         elif 'weather' in keysFound:
             clientIpData = self.getIpData(clientAddress)
             if 'location' not in keysFound and 'time' not in keysFound:#if no location is specified
