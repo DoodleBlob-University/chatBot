@@ -106,4 +106,12 @@
       "bastard",
       "prick"
     ]
+    ,"currency":
+    [
+      "usd",
+      "gbp",
+      "eur",
+      "to",
+      "from"
+    ]
 }

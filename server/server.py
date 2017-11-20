@@ -9,6 +9,7 @@ import netifaces
 import requests
 from aes import AESEncryption
 from weather import weather
+from currency import currency
 
 class server(object):
     ''' server is a class that handled network connections, pass host ip and host port for init'''
@@ -47,28 +48,37 @@ class server(object):
         ''' receiveFromClient handles incoming data from clients '''
         byteSize = 1024
         while True:
-            try:
+            #try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
-                    receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"").replace('.',"")
+                    receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"")
                     client.sendall(self.formResponse(receivedStr, self.key, clientAddress))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
-            except Exception as e:
-                print("{} - Disconnecting {}\n".format(e, clientAddress))
-                client.close()
-                return False
+          #  except Exception as e:
+            #    print("{} - Disconnecting {}\n".format(e, clientAddress))
+            #    client.close()
+             #   return False
 
     def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
-        keysFound, wordLocation = self.searchJSON(receivedStr)
+        keysFound, extraData = self.searchJSON(receivedStr)
         print(keysFound)
+        print(extraData)
         ## add cure if statment here please
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language.")
+        elif 'currency' in keysFound:
+            if extraData != "":
+                extraData = extraData.split(':')
+                currencyData = currency(None)
+                answer = currency.convert(extraData[1],extraData[2],extraData[0])
+                return aesObject.encrypt("{} {} in {} is {}".format(extraData[0],extraData[1].upper(),extraData[2].upper(),str(answer)))
+            else:
+                return aesObject.encrypt("Sorry, I can't convert that")
         elif 'weather' in keysFound:
             if 'location' not in keysFound:
                 clientIpData = self.getIpData(clientAddress)
@@ -77,7 +87,7 @@ class server(object):
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
                 return aesObject.encrypt('It is currently {} and the temperature is {}'.format(forcastRequest['currently']['summary'],str(forcastRequest['currently']['temperature'])))
             else:
-                lat, lng = self.getLocationCoords(wordLocation, "UK")
+                lat, lng = self.getLocationCoords(extraData, "UK")
                 location = {'latitude': lat, 'longitude': lng}
                 weatherData = weather(None, location)
                 forcastRequest = weatherData.forcastRequest(weatherData.url)
@@ -105,7 +115,7 @@ class server(object):
         jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
         keysFound = []
-        location = ""
+        extraData = ""
         for key in jsonData:
             for keyword in jsonData[key]:
                 for word in recievedList:
@@ -113,16 +123,24 @@ class server(object):
                         if key == 'location':
                             if 'location' not in keysFound: #if a location keyword has not been found...
                                 try: #gets the next word after "in" or "at" which should be the location
-                                    location = recievedList[recievedList.index(word) + 1]
+                                    extraData = recievedList[recievedList.index(word) + 1]
                                     keysFound.append(key)#adds 'Location' to keysFound
                                 except: #if the next word dosent exist and it goes out of bound of the array
                                     continue
                             else:#if a location keyword has already been found... - ignore all future location keywords
                                 continue
+                        elif 'currency' == key:
+                            if 'currency' not in keysFound:
+                                keysFound.append(key)
+                                currencyData = currency(recievedStr)
+                                extraData = currencyData.inputStr(currencyData.input)
+                            else:
+                                continue
+
                         else:#add key to keysFound
                             keysFound.append(key)
                         continue
-        return keysFound, location
+        return keysFound, extraData
 
     def celery(self):
         from random import randint
