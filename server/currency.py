@@ -25,12 +25,10 @@ class currency(object):
         for word in input:
             if word == "to":
                 try:
-                    response = input[input.index(word)-2] 
+                    response = input[input.index(word)-2]
                     response = str(round(float(response),2))
                     response += ":" + input[input.index(word)-1] + ":"
                     response += input[input.index(word)+1]
                 except Exception as e:
-                    continue
+                    response = ""
         return response
-
-

@@ -69,13 +69,13 @@ class server(object):
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language.")
         elif 'currency' in keysFound:
-            if extraData['location'] != "":
-                extraData = extraData.split(':')
+            if extraData.get('currency') != "":
+                currencyInfo = extraData.get('currency').split(':')
                 currencyData = currency(None)
-                answer = currency.convert(extraData[1],extraData[2],extraData[0])
-                return aesObject.encrypt("{} {} in {} is {}".format(extraData[0],extraData[1].upper(),extraData[2].upper(),str(answer)))
+                answer = currency.convert(currencyInfo[1],currencyInfo[2],currencyInfo[0])
+                return aesObject.encrypt("{} {} in {} is {}".format(currencyInfo[0],currencyInfo[1].upper(),currencyInfo[2].upper(),str(answer)))
             else:
-                return aesObject.encrypt("Sorry, I can't convert that")
+                return aesObject.encrypt("Sorry, I can't convert that.")
         elif 'weather' in keysFound:
             clientIpData = self.getIpData(clientAddress)
             if 'location' not in keysFound and 'time' not in keysFound:#if no location is specified
@@ -86,10 +86,10 @@ class server(object):
             elif 'location' in keysFound and 'time' not in keysFound:#when a location is given
                 from geoCode import geoCode
                 geoCode = geoCode()
-                lat, lng = geoCode.getLocationCoords(extraData['location'], clientIpData['countryCode'])#gets longitude and latitude from google geocode
+                lat, lng = geoCode.getLocationCoords(extraData.get('location'), clientIpData['countryCode'])#gets longitude and latitude from google geocode
                 location = {'latitude': lat, 'longitude': lng}#puts into dictionary
                 weatherData = weather(location)#weatherData = weather class from weather.py
-                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],wordLocation.capitalize(),str(weatherData.currently['temperature'])))
+                return aesObject.encrypt('It is currently {} in {}, and the temperature is {}'.format(weatherData.currently['summary'],extraData.get('location').capitalize(),str(weatherData.currently['temperature'])))
             elif 'location' not in keysFound and 'time' in keysFound:
                 clientIpData = self.getIpData(clientAddress)
                 location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
@@ -97,7 +97,7 @@ class server(object):
                 if time == 'daily':
                     for day in weatherData.daily:
                         print('day: {}'.format(str(day['summary'])))
-            elif 'lcoation' in keysFound and 'time' in keysFound:
+            elif 'location' in keysFound and 'time' in keysFound:
                 pass
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
@@ -126,28 +126,27 @@ class server(object):
             for keyword in jsonData[key]:
                 for word in recievedList:
                     if word.lower() == keyword:
-                        if key == 'location':
-                            if 'location' not in keysFound: #if a location keyword has not been found...
-                                try: #gets the next word after "in" or "at" which should be the location
-                                    extraData['location'] = recievedList[recievedList.index(word) + 1]
-                                    keysFound.append(key)#adds 'Location' to keysFound
-                                except: #if the next word dosent exist and it goes out of bound of the array
-                                    continue
-                            else:#if a location keyword has already been found... - ignore all future location keywords
+                        
+                        if key == 'location' and 'location' not in keysFound: #if a location keyword has not been found...
+                            try: #gets the next word after "in" or "at" which should be the location
+                                extraData['location'] = recievedList[recievedList.index(word) + 1]
+                                keysFound.append(key)#adds 'Location' to keysFound
+                            except: #if the next word dosent exist and it goes out of bound of the array
                                 continue
-                        elif 'currency' == key:
-                            if 'currency' not in keysFound:
-                                keysFound.append(key)
-                                currencyData = currency(recievedStr)
-                                extraData['currency'] = currencyData.inputStr(currencyData.input)
-                            else:
-                                continue
+
+                        elif key == 'currency' and 'currency' not in keysFound:
+                            keysFound.append(key)
+                            currencyData = currency(recievedStr)
+                            extraData['currency'] = currencyData.inputStr(currencyData.input)
+
+                        elif key == 'time' and 'time' not in keysFound:
+                            keysFound.append(key)
+                            extraData['time'] = keyword
 
                         else:#add key to keysFound
                             keysFound.append(key)
-                        if key == 'time' and keyword not in extraData:
-                            extraData['time'] = keyword
                         continue
+
         return keysFound, extraData
 
     def celery(self):
