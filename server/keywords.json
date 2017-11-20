@@ -77,9 +77,11 @@
       "celery"
     ]
     ,"time":
-    [
-      "tomorrow"
-    ]
+    {
+      "daily": "daily",
+      "hourly": "hourly",
+      "hour": "hourly"
+    }
     ,"location":
     [
       "in",
