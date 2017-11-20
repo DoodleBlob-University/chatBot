@@ -96,12 +96,31 @@ class server(object):
                 location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
                 weatherData = weather(location)
                 if extraData['time'] == 'daily':
-                    response = '{}\n\n'.format(str(weatherData.daily['summary']))
+                    response = 'Daily Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.daily['summary']))
                     for day in weatherData.daily['data']:
-                        response = response + '{}\n'.format(str(day['summary']))
-                    return aesObject.encrypt(str(response))
+                        response = response + '{}:\nSummary: {}\nMax: {} @ {}\nMin: {} @ {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperatureMax'],self.unixTimeToDateTime(day['temperatureMaxTime']),day['temperatureMin'],self.unixTimeToDateTime(day['temperatureMinTime']))
+                    return aesObject.encrypt(response)
+                if extraData['time'] == 'hourly':
+                    response = 'Hourly Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.hourly['summary']))
+                    for day in weatherData.hourly['data']:
+                        response = response + '{}:\nSummary: {}\nTempature: {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperature'])
+                    return aesObject.encrypt(response)
             elif 'location' in keysFound and 'time' in keysFound:
-                pass
+                from geoCode import geoCode
+                geoCode = geoCode()
+                lat, lng = geoCode.getLocationCoords(extraData.get('location'), clientIpData['countryCode'])#gets longitude and latitude from google geocode
+                location = {'latitude': lat, 'longitude': lng}
+                weatherData = weather(location)
+                if extraData['time'] == 'daily':
+                    response = 'Daily Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.daily['summary']))
+                    for day in weatherData.daily['data']:
+                        response = response + '{}:\nSummary: {}\nMax: {} @ {}\nMin: {} @ {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperatureMax'],self.unixTimeToDateTime(day['temperatureMaxTime']),day['temperatureMin'],self.unixTimeToDateTime(day['temperatureMinTime']))
+                    return aesObject.encrypt(response)
+                if extraData['time'] == 'hourly':
+                    response = 'Hourly Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.hourly['summary']))
+                    for day in weatherData.hourly['data']:
+                        response = response + '{}:\nSummary: {}\nTempature: {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperature'])
+                    return aesObject.encrypt(response)
         elif 'cinema' in keysFound:
             return aesObject.encrypt("You are talking about cinema")
         elif 'ipinfo' in keysFound:

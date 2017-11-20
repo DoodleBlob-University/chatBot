@@ -9,6 +9,7 @@ class weather(object):
         self.weatherData = self.forcastRequest(self.url)
         self.currently = self.weatherData['currently']
         self.daily = self.weatherData['daily']
+        self.hourly = self.weatherData['hourly']
 
     def forcastRequest(self, url):
         request = requests.get(url)
