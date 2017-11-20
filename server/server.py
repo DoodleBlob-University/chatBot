@@ -65,7 +65,7 @@ class server(object):
     def formResponse(self, receivedStr, key, clientAddress):
         aesObject = AESEncryption(key)
         keysFound, wordLocation = self.searchJSON(receivedStr)
-        # IF ONLY PYTHON HAD SWITCH STATEMENTS
+        # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
         if 'curse' in keysFound:
             return aesObject.encrypt("Please watch your language, you absolute ****!")
         elif 'weather' in keysFound:
