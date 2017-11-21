@@ -60,6 +60,10 @@ class TestGeocode(unittest.TestCase):#Charlie
         placeID = self.geocode.getPlaceID("Coventry")               #gets PlaceID of Coventry
         self.assertEqual("ChIJtyJuZVGxcEgRiQZPVvVg9gQ", placeID)    #checks if PlaceID is correct
 
+    def test_getPlaceIDFAIL(self):
+        placeID = self.geocode.getPlaceID("")   #inputs empty string
+        self.assertEqual("", placeID)           #checks if status is NOT okay
+
     def test_getLocationCoords(self):
         location = self.geocode.getLocationCoords("Coventry")                       #gets coords of Coventry
         self.assertEqual({'latitude':52.406822,'longitude':-1.519693},location)     #checks if location is correct
