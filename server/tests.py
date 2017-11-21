@@ -1,6 +1,6 @@
 import unittest
 
-class testServer(unittest.TestCase):
+class testServer(unittest.TestCase):#Dom
 
     def setUp(self):
         from server import server
@@ -25,8 +25,8 @@ class weather(unittest.TestCase):
     def test_unixTimeToDateTime(self):
         self.assertEqual(self.weather.unixTimeToDateTime(self, '1511276400'), '2017-11-21 15:00')
 
-class TestAES(unittest.TestCase):
-
+class TestAES(unittest.TestCase):#Charlie and Dom
+    '''tests aes to ensure that encrypted strings can be decrypted'''
     def setUp(self):
         from aes import AESEncryption
         self.aes = AESEncryption('this is a key')
@@ -50,7 +50,7 @@ class TestCurrency(unittest.TestCase):
     def test_checkUSD(self):
         pass
 
-class TestGeocode(unittest.TestCase):
+class TestGeocode(unittest.TestCase):#Charlie
     '''tests both functions in geocode.py to see if they return the correct values'''
     def setUp(self):
         from geocode import geocode
