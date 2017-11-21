@@ -71,11 +71,11 @@ class server(object):
 
         elif 'currency' in keysFound:
             if extraData.get('currency') != "":
-                currencyInfo = extraData.get('currency').split(':')
-                currencyData = currency(None)
-                answer = currency.convert(currencyInfo[1],currencyInfo[2],currencyInfo[0])
+                currencyInfo = extraData.get('currency')
+                currencyData = currency()
+                answer = currencyData.convert(currencyInfo['cFrom'],currencyInfo['cTo'],currencyInfo['amount'])
                 if answer != "":
-                    return "{} {} in {} is {}".format(currencyInfo[0],currencyInfo[1].upper(),currencyInfo[2].upper(),str(answer))
+                    return "{} {} in {} is {}".format(currencyInfo['amount'],currencyInfo['cFrom'].upper(),currencyInfo['cTo'].upper(), answer)
             return "Sorry, I can't convert that."
 
         elif 'weather' in keysFound:
@@ -121,8 +121,8 @@ class server(object):
 
                         elif key == 'currency' and 'currency' not in keysFound:                     #if the key is 'currency', and a currency has not yet been found
                             keysFound.append(key)                                                   #add the key to keysFound
-                            currencyData = currency(recievedStr)                                    #create an instance of the class 'currency'
-                            extraData['currency'] = currencyData.inputStr(currencyData.input)       #then return the currency conversion and add this to extraData
+                            currencyData = currency()                                               #create an instance of the class 'currency'
+                            extraData['currency'] = currencyData.inputStr(recievedStr)              #then return the currency conversion and add this to extraData
 
                         elif key == 'time' and 'time' not in keysFound:
                             keysFound.append(key)
