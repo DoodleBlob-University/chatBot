@@ -55,7 +55,7 @@ def findLocation():
 
 def cinemaSearch():
     """This function takes the location from the previous one as an input and prints
-    the first five closest cinemas in a radius of 3,5 miles."""
+    the first five closest cinemas in a radius of 3,5 miles.- Mitko Donchev"""
     longlat = list(findLocation()) #using the output from the previous function and store it in a list
     count = 0
     limit = 5 #set a limit
@@ -141,7 +141,7 @@ def cinemaID():
 
 def showTime(IDC):
     """This function is using information from the previous function 
-    as input and present to the user all the iformation for the selected cinema and the showtime."""
+    as input and present to the user all the iformation for the selected cinema and the showtime.- Mitko Donchev """
     cinemaIDlist = list(IDC) #use the output from the previous function and make it a list
     while True: #using while loop to give the user an option to get information about several cinemas 
         try: #checks if the input is valid or not by tring to execute the code block
