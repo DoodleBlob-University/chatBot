@@ -17,6 +17,14 @@ class testServer(unittest.TestCase):
         self.assertEqual(self.server.searchJSON('Hi what is the weather today ?'), ['weather'])
         self.assertEqual(self.server.searchJSON('Is it going to rain today ?'), ['weather'])
 
+class weather(unittest.TestCase):
+    def setUp(self):
+        from weather import weather
+        self.weather = weather
+    
+    def test_unixTimeToDateTime(self):
+        self.assertEqual(self.weather.unixTimeToDateTime('1511276400'), '2017-11-22 15:00')
+
 class TestAES(unittest.TestCase):
 
     def setUp(self):
