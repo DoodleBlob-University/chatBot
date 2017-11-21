@@ -17,6 +17,8 @@ class weather(object):
             from geocode import geocode
             geoCode = geocode()
             location = geoCode.getLocationCoords(extra.get('location'))
+            if not location:
+                return "Sorry, I can't fetch information about that location right now."
             locationStr = " in {}".format(extra.get('location').capitalize())
         else:
             location = {'latitude': clientaddress['lat'], 'longitude': clientaddress['lon']}
