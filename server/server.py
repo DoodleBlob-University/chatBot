@@ -46,7 +46,7 @@ class server(object):
 
     def receiveFromClient(self, client, clientAddress):
         ''' receiveFromClient handles incoming data from clients '''
-        byteSize = 1024
+        byteSize = 2048
         while True:
             #try:
                 receivedData = client.recv(byteSize)
