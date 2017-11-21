@@ -87,16 +87,14 @@ class server(object):
             return "You are talking about cinema"
 
         elif 'ipinfo' in keysFound:
-            query = self.getIpData(clientAddress)['query']
-            isp = self.getIpData(clientAddress)['isp']
-            return "Your IP is {}, provided by {}.".format(query, isp)
+            ipData = self.getIpData(clientAddress)
+            return "Your IP is {}, provided by {}.".format(ipData['query'], ipData['isp'])
 
         elif 'celery' in keysFound:
             return self.celery()
 
         else:
             return "Sorry, I don't understand what you are talking about."
-        return "I DON'T KNOW WHAT TO SAY!"
 
     def getServerIP(self):
         ''' returns servers internal and external ip address '''
