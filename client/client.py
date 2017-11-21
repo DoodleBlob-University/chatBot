@@ -55,7 +55,7 @@ def main():
         else:
             aesObject = AESEncryption(args.key)
             sock.sendall(aesObject.encrypt(messageData))
-            receivedData = sock.recv(2048)
+            receivedData = sock.recv(4096)
             try:
                 receivedStr = aesObject.decrypt(receivedData)
                 if receivedStr[:3] == '/w/':
