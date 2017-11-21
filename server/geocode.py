@@ -18,7 +18,7 @@ class geocode(object):
                 lat = placeinfo['results'][0]['geometry']['location']['lat']
                 lng = placeinfo['results'][0]['geometry']['location']['lng']
                 return {'latitude': lat, 'longitude': lng}
-        return "",""
+        return {}
 
     def getPlaceID(self, location):
         '''Uses Google Places API to predict the correct location to what the user entered, and returns the ID code for said location'''
