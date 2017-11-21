@@ -23,7 +23,7 @@ class server(object):
         self.socket.bind((self.hostIP, self.hostPort))
         print('** server started on\n** internal - {}:{}\n** external - {}:{}\n'.format(self.getServerIP()['internal'], self.hostPort,self.getServerIP()['external'] ,self.hostPort))
 
-    def serverListen(self):
+    def serverListen(self):#Dom
         ''' serverListen listens to incoming connects from clients and opens a new thread for each connected client '''
         self.socket.listen(15)
         while True:
@@ -35,7 +35,7 @@ class server(object):
             except:
                 raise Exception('Client connection error')
 
-    def getIpData(self, clientAddress):
+    def getIpData(self, clientAddress):#Dom
         '''gets ip information in json format from ip address'''
         request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))#gets data about the clients ip
         requestJson = request.json()
@@ -44,7 +44,7 @@ class server(object):
         else:
             return self.getIpData('') #else gets the ip for the server when the client is on the same network
 
-    def receiveFromClient(self, client, clientAddress):
+    def receiveFromClient(self, client, clientAddress):#Dom
         ''' receiveFromClient handles incoming data from clients '''
         byteSize = 4096
         while True:
@@ -63,7 +63,7 @@ class server(object):
             #    client.close()
             #    return False
 
-    def formResponse(self, receivedStr, key, clientAddress):
+    def formResponse(self, receivedStr, key, clientAddress):#Charlie and Dom
         keysFound, extraData = self.searchJSON(receivedStr)
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
         if 'curse' in keysFound:
@@ -96,13 +96,13 @@ class server(object):
         else:
             return "Sorry, I don't understand what you are talking about."
 
-    def getServerIP(self):
+    def getServerIP(self):#Charlie and Dom
         ''' returns servers internal and external ip address '''
         deviseName = netifaces.gateways()['default'][netifaces.AF_INET][1]
         return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
-    def searchJSON(self, recievedStr):
-        ''' Gets JSON data from a webpage - the git repo '''
+    def searchJSON(self, recievedStr):#Charlie
+        '''searches recievedStr for keywords which appear in keywords.json. returns a list of keysFound and a dictionary of additional data'''
         jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
         keysFound = []
@@ -124,40 +124,38 @@ class server(object):
                             currencyData = currency()                                               #create an instance of the class 'currency'
                             extraData['currency'] = currencyData.inputStr(recievedStr)              #then return the currency conversion and add this to extraData
 
-                        elif key == 'time' and 'time' not in keysFound:
-                            keysFound.append(key)
-                            extraData['time'] = keyword
+                        elif key == 'time' and 'time' not in keysFound:                 #if the key is 'time', and a time has not yet been found
+                            keysFound.append(key)                                       #add the key to keysFound
+                            extraData['time'] = keyword                                 #adds time to extraData
 
                         else:
-                            if key not in keysFound:
-                                keysFound.append(key)
+                            if key not in keysFound:            #if the key has not yet been found
+                                keysFound.append(key)           #add key to keysFound
                         continue
 
         return keysFound, extraData
 
-    def celery(self):
-        '''Celery man easter egg'''
+    def celery(self):#Charlie
+        '''Celery man easter egg, returns a string in bytes'''
         from random import randint
-        rand = randint(0, 3)
-        celerystring = b""
-        if rand == 0: celerystring = "Good morning Paul, what will your first sequence of the day be?"
-        elif rand == 1: celerystring = "Load sequence Oyster"
-        elif rand == 2: celerystring = "4d3d3 engaged"
-        elif rand == 3: celerystring = "Generating nude Tayne"
-        return celerystring
+        rand = randint(0, 3)        #gets a random integer between 0 and 3
+        if rand == 0: return b"Good morning Paul, what will your first sequence of the day be?"
+        elif rand == 1: return b"Load sequence Oyster"
+        elif rand == 2: return b"4d3d3 engaged"
+        elif rand == 3: return b"Generating nude Tayne"
 
-def getArgs():
+def getArgs():#Dom
     ''' getArgs returns all program arguments '''
     parser = argparse.ArgumentParser(description='') # Add description
     parser.add_argument('-p', '--port', metavar='Port', default=1143, type=int, help='Server port')
     parser.add_argument('-k', '--key', metavar='Key', default='gbaei395y27ny9', type=str, help='Encryption Key')
     return parser.parse_args()
 
-def drawHeader():
+def drawHeader():#Dom
     ''' draws program ui header '''
     print('*** Server Header ***\nWelcome\n\n')
 
-def main():
+def main():#Dom
     ''' main '''
     drawHeader()
     args = getArgs()
