@@ -42,14 +42,13 @@ class TestAES(unittest.TestCase):
     def test_encryptdecrypt(self):
         self.assertEqual("Hello World", self.aes.decrypt(self.aes.encrypt("Hello World")))
 
-class TestCurrency(unittest.TestCase):
-
+class currency(unittest.TestCase):
     def setUp(self):
         from currency import currency
-
-    def test_checkUSD(self):
-        pass
-
+        self.currency = currency
+    
+    def test_notReturnBlank(self):
+        self.assertNotEqual(self.currency, "")
 
 if __name__ == '__main__':
     unittest.main()
