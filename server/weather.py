@@ -39,4 +39,4 @@ class weather(object):
 
     def unixTimeToDateTime(self, unixTime):
         import datetime
-        return datetime.datetime.fromtimestamp(int("1284101485")).strftime('%Y-%m-%d %H:%M')
+        return datetime.datetime.fromtimestamp(int(unixTime)).strftime('%Y-%m-%d %H:%M')
