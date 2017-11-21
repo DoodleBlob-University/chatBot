@@ -68,6 +68,7 @@ class server(object):
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
         if 'curse' in keysFound:
             return "Please watch your language."
+
         elif 'currency' in keysFound:
             if extraData.get('currency') != "":
                 currencyInfo = extraData.get('currency').split(':')
@@ -79,60 +80,23 @@ class server(object):
 
         elif 'weather' in keysFound:
             clientIpData = self.getIpData(clientAddress)
-            if 'location' not in keysFound and 'time' not in keysFound:#if no location is specified
-                clientIpData = self.getIpData(clientAddress)
-                location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}#puts location data from IP in dictionary
-                weatherData = weather(location)#weatherData = weather class from weather.py
-                return 'It is currently {} and the temperature is {} Celsius'.format(weatherData.currently['summary'],str(weatherData.currently['temperature']))
+            weatherData = weather()
+            return weatherData.weatherResponse(keysFound, clientIpData, extraData)
 
-            elif 'location' in keysFound and 'time' not in keysFound:#when a location is given
-                from geocode import geocode
-                geoCode = geocode()
-                lat, lng = geoCode.getLocationCoords(extraData.get('location'))#gets longitude and latitude from google geocode
-                location = {'latitude': lat, 'longitude': lng}#puts into dictionary
-                weatherData = weather(location)#weatherData = weather class from weather.py
-                return 'It is currently {} in {}, and the temperature is {} Celsius'.format(weatherData.currently['summary'],extraData['location'].capitalize(),str(weatherData.currently['temperature']))
-            elif 'location' not in keysFound and 'time' in keysFound:
-                clientIpData = self.getIpData(clientAddress)
-                location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}
-                weatherData = weather(location)
-                if extraData['time'] == 'daily':
-                    response = 'Daily Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.daily['summary']))
-                    for day in weatherData.daily['data']:
-                        response = response + '{}:\nSummary: {}\nMax: {} @ {}\nMin: {} @ {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperatureMax'],self.unixTimeToDateTime(day['temperatureMaxTime']),day['temperatureMin'],self.unixTimeToDateTime(day['temperatureMinTime']))
-                    return response
-                if extraData['time'] == 'hourly':
-                    response = 'Hourly Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.hourly['summary']))
-                    for day in weatherData.hourly['data']:
-                        response = response + '{}:\nSummary: {}\nTempature: {} Celsius\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperature'])
-                    return response
-            elif 'location' in keysFound and 'time' in keysFound:
-                from geocode import geocode
-                geoCode = geocode()
-                lat, lng = geoCode.getLocationCoords(extraData.get('location'))#gets longitude and latitude from google geocode
-                location = {'latitude': lat, 'longitude': lng}
-                weatherData = weather(location)
-                if extraData['time'] == 'daily':
-                    response = 'Daily Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.daily['summary']))
-                    for day in weatherData.daily['data']:
-                        response = response + '{}:\nSummary: {}\nMax: {} @ {}\nMin: {} @ {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperatureMax'],self.unixTimeToDateTime(day['temperatureMaxTime']),day['temperatureMin'],self.unixTimeToDateTime(day['temperatureMinTime']))
-                    return response
-                if extraData['time'] == 'hourly':
-                    response = 'Hourly Weather Forcast:\nSummary: {}\n\n'.format(str(weatherData.hourly['summary']))
-                    for day in weatherData.hourly['data']:
-                        response = response + '{}:\nSummary: {}\nTempature: {} Celsius\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperature'])
-                    return response
         elif 'cinema' in keysFound:
             return "You are talking about cinema"
+
         elif 'ipinfo' in keysFound:
             query = self.getIpData(clientAddress)['query']
             isp = self.getIpData(clientAddress)['isp']
             return "Your IP is {}, provided by {}.".format(query, isp)
+
         elif 'celery' in keysFound:
             return self.celery()
+
         else:
             return "Sorry, I don't understand what you are talking about."
-        return 'None'
+        return "I DON'T KNOW WHAT TO SAY!"
 
     def getServerIP(self):
         ''' returns servers internal and external ip address '''
@@ -174,6 +138,7 @@ class server(object):
         return keysFound, extraData
 
     def celery(self):
+        '''Celery man easter egg'''
         from random import randint
         rand = randint(0, 3)
         celerystring = b""
@@ -182,9 +147,6 @@ class server(object):
         elif rand == 2: celerystring = "4d3d3 engaged"
         elif rand == 3: celerystring = "Generating nude Tayne"
         return celerystring
-
-    def unixTimeToDateTime(self, unixTime):
-        return datetime.datetime.fromtimestamp(int("1284101485")).strftime('%Y-%m-%d %H:%M')
 
 def getArgs():
     ''' getArgs returns all program arguments '''
