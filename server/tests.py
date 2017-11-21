@@ -24,6 +24,7 @@ class weather(unittest.TestCase):
     
     def test_unixTimeToDateTime(self):
         self.assertEqual(self.weather.unixTimeToDateTime(self, '1511276400'), '2017-11-21 15:00')
+        self.assertEqual(self.weather.unixTimeToDateTime(self, '910094199'), '1998-11-03 11:56')
 
 class TestAES(unittest.TestCase):
 
