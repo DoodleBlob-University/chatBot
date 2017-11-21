@@ -70,7 +70,7 @@ class server(object):
             return "Please watch your language."
 
         elif 'currency' in keysFound:
-            if extraData.get('currency') != "":
+            if extraData.get('currency'):
                 currencyInfo = extraData.get('currency')
                 currencyData = currency()
                 answer = currencyData.convert(currencyInfo['cFrom'],currencyInfo['cTo'],currencyInfo['amount'])
