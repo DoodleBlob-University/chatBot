@@ -1,6 +1,6 @@
 import unittest
 
-class testServer(unittest.TestCase):
+class testServer(unittest.TestCase):#Dom
 
     def setUp(self):
         from server import server
@@ -21,12 +21,12 @@ class weather(unittest.TestCase):
     def setUp(self):
         from weather import weather
         self.weather = weather
-    
+
     def test_unixTimeToDateTime(self):
-        self.assertEqual(self.weather.unixTimeToDateTime('1511276400'), '2017-11-22 15:00')
+        self.assertEqual(self.weather.unixTimeToDateTime(self, '1511276400'), '2017-11-21 15:00')
 
-class TestAES(unittest.TestCase):
-
+class TestAES(unittest.TestCase):#Charlie and Dom
+    '''tests aes to ensure that encrypted strings can be decrypted'''
     def setUp(self):
         from aes import AESEncryption
         self.aes = AESEncryption('this is a key')
@@ -36,7 +36,7 @@ class TestAES(unittest.TestCase):
         self.assertEqual(64, len(ciphertext))
 
     def test_decrypt(self):
-        ciphertext = b'2IlEjjMDiSf96UTbgaYU8+SgYIWjKtGPJmpoCr/1pAJer0E5VeLhqH9arvgSPWEr'
+        ciphertext = b'URGaUFjpxuHHhQ21Cextqvi6/OegopSbcyQw9CxRRDMfeD5EnQIz6gt+JeH73+4g'
         self.assertEqual("Hello World", self.aes.decrypt(ciphertext))
 
     def test_encryptdecrypt(self):
@@ -49,6 +49,20 @@ class currency(unittest.TestCase):
     
     def test_notReturnBlank(self):
         self.assertNotEqual(self.currency, "")
+
+class TestGeocode(unittest.TestCase):#Charlie
+    '''tests both functions in geocode.py to see if they return the correct values'''
+    def setUp(self):
+        from geocode import geocode
+        self.geocode = geocode()
+
+    def test_getPlaceID(self):
+        placeID = self.geocode.getPlaceID("Coventry")               #gets PlaceID of Coventry
+        self.assertEqual("ChIJtyJuZVGxcEgRiQZPVvVg9gQ", placeID)    #checks if PlaceID is correct
+
+    def test_getLocationCoords(self):
+        location = self.geocode.getLocationCoords("Coventry")                       #gets coords of Coventry
+        self.assertEqual({'latitude':52.406822,'longitude':-1.519693},location)     #checks if location is correct
 
 if __name__ == '__main__':
     unittest.main()
