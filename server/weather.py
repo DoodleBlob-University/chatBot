@@ -2,7 +2,7 @@
 import requests
 
 class weather(object):
-    def __init__(self,):
+    def __init__(self):
         self.forcastApiKey = '1cd16597539dafae0c09187ef4dc19bc'
 
     def forcastRequest(self, location):
@@ -17,14 +17,14 @@ class weather(object):
             from geocode import geocode
             geoCode = geocode()
             location = geoCode.getLocationCoords(extra.get('location'))
+            if not location:
+                return "Sorry, I can't fetch information about that location right now."
             locationStr = " in {}".format(extra.get('location').capitalize())
         else:
             location = {'latitude': clientaddress['lat'], 'longitude': clientaddress['lon']}
         weatherData = self.forcastRequest(location)
-
         if 'time' not in keysFound:
             return 'It is currently {}{} and the temperature is {} Celsius'.format(weatherData['currently']['summary'],locationStr,str(weatherData['currently']['temperature']))
-
         if extra.get('time') == 'daily':
             response = 'Daily Weather Forcast{}:\nSummary: {}\n\n'.format(locationStr, str(weatherData['daily']['summary']))
             for day in weatherData['daily']['data']:
