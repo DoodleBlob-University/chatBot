@@ -27,13 +27,21 @@ class weather(object):
             return 'It is currently {}{} and the temperature is {} Celsius'.format(weatherData['currently']['summary'],locationStr,str(weatherData['currently']['temperature']))
         if extra.get('time') == 'daily':
             response = 'Daily Weather Forcast{}:\nSummary: {}\n\n'.format(locationStr, str(weatherData['daily']['summary']))
+            count = 0
             for day in weatherData['daily']['data']:
                 response = response + '{}:\nSummary: {}\nMax: {} @ {}\nMin: {} @ {}\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperatureMax'],self.unixTimeToDateTime(day['temperatureMaxTime']),day['temperatureMin'],self.unixTimeToDateTime(day['temperatureMinTime']))
+                count += 1
+                if count == 8:
+                    break
             return response
         elif extra.get('time') == 'hourly':
             response = 'Hourly Weather Forcast{}:\nSummary: {}\n\n'.format(locationStr, str(weatherData['hourly']['summary']))
+            count = 0
             for day in weatherData['hourly']['data']:
                 response = response + '{}:\nSummary: {}\nTempature: {} Celsius\n\n'.format(self.unixTimeToDateTime(day['time']),day['summary'],day['temperature'])
+                count += 1
+                if count == 8:
+                    break
             return response
         return None
 
