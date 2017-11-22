@@ -1,6 +1,6 @@
 import unittest
 
-class testServer(unittest.TestCase):#Dom
+class testServer(unittest.TestCase):
 
     def setUp(self):
         from server import server
@@ -12,10 +12,9 @@ class testServer(unittest.TestCase):#Dom
         self.assertEqual(self.server.getIpData('127.0.0.1')['status'], 'success')
 
     def test_searchJSON(self):
-        self.assertEqual(self.server.searchJSON(''), [])
-        self.assertEqual(self.server.searchJSON('Where can i see a film'), ['cinema'])
-        self.assertEqual(self.server.searchJSON('Hi what is the weather today ?'), ['weather'])
-        self.assertEqual(self.server.searchJSON('Is it going to rain today ?'), ['weather'])
+        self.assertEqual(self.server.searchJSON('This has no keywords'), ([], {}))              #checks if response is correct when no keywords are present
+        self.assertEqual(self.server.searchJSON('Hi what is the weather'), (['weather'], {}))   #tests whether it can recognise a keyword
+        self.assertEqual(self.server.searchJSON('Is it going to rain in Coventry'), (['location', 'weather'], {'location': 'Coventry'}) or (['weather', 'location'], {'location': 'Coventry'})) #tests whether it can recognise a keyword and fetch location name
 
 class weather(unittest.TestCase):
     def setUp(self):
@@ -46,7 +45,7 @@ class currency(unittest.TestCase):
     def setUp(self):
         from currency import currency
         self.currency = currency
-    
+
     def test_notReturnBlank(self):
         self.assertNotEqual(self.currency, "")
 
