@@ -21,7 +21,7 @@ class currency(object):
             return ""
 
     def inputStr(self, userinput):
-    """Takes userinput """
+        '''Takes userinput '''
         userinput = userinput.split(' ')
         response = {}
         for word in userinput:
