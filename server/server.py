@@ -66,7 +66,6 @@ class server(object):
     def formResponse(self, receivedStr, key, clientAddress):#Charlie and Dom
         keysFound, extraData = self.searchJSON(receivedStr)
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
-        print(self.searchJSON(receivedStr))
         if 'curse' in keysFound:
             return "Please watch your language."
 
