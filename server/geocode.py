@@ -1,8 +1,6 @@
-#!/usr/bin/python
 import requests
-
+### Charlie's Code
 class geocode(object):
-
     def __init__(self):
         self.googlePlaces = 'AIzaSyDQ-mcgK1gSnI6soXWZnAA2Z9MeDnb5ZRo'
         self.googleGeocode = 'AIzaSyDiqfHUyzaaCEPr2gF04NPFyhR7Iew30vs'
@@ -28,3 +26,4 @@ class geocode(object):
         if placeinfo['status'] == "OK":
             return placeinfo['predictions'][0]['place_id']
         return ""
+### End Charlie's Code
