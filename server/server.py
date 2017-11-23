@@ -45,7 +45,7 @@ class server(object): ### Dominic Egginton
         ''' receiveFromClient handles incoming data from clients and sends formatted responses back to client '''
         byteSize = 4096 # large bytesize as we need to send and receive large data between client and server
         while True:
-            #try:
+            try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
@@ -55,10 +55,10 @@ class server(object): ### Dominic Egginton
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
-            #except Exception as e:
-            #    print("{} - Disconnecting {}\n".format(e, clientAddress))
-            #    client.close()
-            #    return False
+            except Exception as e:
+                print("{} - Disconnecting {}\n".format(e, clientAddress))
+                client.close()
+                return False
 
     def formResponse(self, receivedStr, clientAddress, client): ### Charlie Barry and Dominic Egginton
         keysFound, extraData = self.searchJSON(receivedStr)
