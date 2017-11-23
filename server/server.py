@@ -91,7 +91,7 @@ class server(object):
             return "Your IP is {}, provided by {}.".format(ipData['query'], ipData['isp'])
 
         elif 'celery' in keysFound:
-            return self.celery()
+            return "/w/https://youtu.be/MHWBEK8w_YY"
 
         else:
             return "Sorry, I don't understand what you are talking about."
@@ -134,15 +134,6 @@ class server(object):
                         continue
 
         return keysFound, extraData
-
-    def celery(self):#Charlie
-        '''Celery man easter egg, returns a string in bytes'''
-        from random import randint
-        rand = randint(0, 3)        #gets a random integer between 0 and 3
-        if rand == 0: return b"Good morning Paul, what will your first sequence of the day be?"
-        elif rand == 1: return b"Load sequence Oyster"
-        elif rand == 2: return b"4d3d3 engaged"
-        elif rand == 3: return b"Generating nude Tayne"
 
 def getArgs():#Dom
     ''' getArgs returns all program arguments '''

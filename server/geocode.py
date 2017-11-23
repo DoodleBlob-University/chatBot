@@ -1,4 +1,4 @@
-import requests
+import requests ### imported module requests <https://pypi.python.org/pypi/requests> 9/11/2017
 ### Charlie's Code
 class geocode(object):
     def __init__(self):
