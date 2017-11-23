@@ -1,2 +1,4 @@
 netifaces
 requests
+colorama
+pycrypto

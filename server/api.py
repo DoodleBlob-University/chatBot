@@ -1,15 +1,7 @@
-#!/usr/bin/python
 import requests
 import urllib.request
 import json
 import time
-
-def apiCall(apiURL):
-    request = requests.get(apiURL)
-    return request.json()
-
-if __name__ == '__main__':
-    pass ## add tests here
 
 #second getaddress API = TQoCHFHv8EeFKg8CXzXISQ11057
 def checkPostcode():
