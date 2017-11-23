@@ -1,5 +1,5 @@
 ##### Function to search google places ratings!!!!!!! #####
-def getGooglePlacesRatings(restaurants, location, keyword):
+def getGooglePlaces(restaurants, location, keyword):
     # 'restaurants': array of dictionaries = [{u"name":u"Jimbo's",u"location":u"Coventry"},{u"name":u"Taste of China",u"location":u"London"}]
  
     # Set google places api
