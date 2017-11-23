@@ -1,7 +1,7 @@
 import base64
 import hashlib
-from Crypto import Random
-from Crypto.Cipher import AES
+from Crypto import Random ### imported Random from Crypto <https://pypi.python.org/pypi/pycrypto> - 09/11/17
+from Crypto.Cipher import AES ### imported AES from Crypto.Cipher <https://pypi.python.org/pypi/pycrypto> - 09/11/17
 
 class AESEncryption(object):
 

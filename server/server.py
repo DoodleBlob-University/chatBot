@@ -3,9 +3,9 @@ import threading
 import argparse
 import json
 import datetime
-import netifaces ### imported module netifaces <https://pypi.python.org/pypi/netifaces>
-import requests ### imported module requests <https://pypi.python.org/pypi/requests>
-from aes import AESEncryption ### imported module AESEncryption <https://pypi.python.org/pypi/pycrypto>
+import netifaces ### imported module netifaces <https://pypi.python.org/pypi/netifaces> - 09/11/17
+import requests ### imported module requests <https://pypi.python.org/pypi/requests> - 09/11/17
+from aes import AESEncryption
 from weather import weather
 from currency import currency
 
