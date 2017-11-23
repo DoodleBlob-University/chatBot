@@ -1,6 +1,6 @@
 import unittest
 
-class testServer(unittest.TestCase):#Dom
+class testServer(unittest.TestCase):
 
     def setUp(self):
         from server import server
@@ -12,10 +12,9 @@ class testServer(unittest.TestCase):#Dom
         self.assertEqual(self.server.getIpData('127.0.0.1')['status'], 'success')
 
     def test_searchJSON(self):
-        self.assertEqual(self.server.searchJSON(''), [])
-        self.assertEqual(self.server.searchJSON('Where can i see a film'), ['cinema'])
-        self.assertEqual(self.server.searchJSON('Hi what is the weather today ?'), ['weather'])
-        self.assertEqual(self.server.searchJSON('Is it going to rain today ?'), ['weather'])
+        self.assertEqual(self.server.searchJSON('This has no keywords'), ([], {}))              #checks if response is correct when no keywords are present
+        self.assertEqual(self.server.searchJSON('Hi what is the weather'), (['weather'], {}))   #tests whether it can recognise a keyword
+        self.assertEqual(self.server.searchJSON('Is it going to rain in Coventry'), (['location', 'weather'], {'location': 'Coventry'}) or (['weather', 'location'], {'location': 'Coventry'})) #tests whether it can recognise a keyword and fetch location name
 
 class weather(unittest.TestCase):
     def setUp(self):
@@ -24,6 +23,7 @@ class weather(unittest.TestCase):
 
     def test_unixTimeToDateTime(self):
         self.assertEqual(self.weather.unixTimeToDateTime(self, '1511276400'), '2017-11-21 15:00')
+        self.assertEqual(self.weather.unixTimeToDateTime(self, '910094199'), '1998-11-03 11:56')
 
 class TestAES(unittest.TestCase):#Charlie and Dom
     '''tests aes to ensure that encrypted strings can be decrypted'''
@@ -46,11 +46,17 @@ class currency(unittest.TestCase): #Thomas
     def setUp(self):
         from currency import currency
         self.currency = currency
+<<<<<<< HEAD
     
     def test_currency(self):
         self.assertNotEqual(self.currency, "") #checks return is empty if unexpected input
 
         
+=======
+
+    def test_notReturnBlank(self):
+        self.assertNotEqual(self.currency, "")
+>>>>>>> bf41c91737620603836937f1266e44fef31232e6
 
 class TestGeocode(unittest.TestCase):#Charlie
     '''tests both functions in geocode.py to see if they return the correct values'''

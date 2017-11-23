@@ -6,7 +6,7 @@ class currency(object):
         self.key = '37d9bd361185111f6420d35bdec31f45'
 
     def convert(self, cFrom, cTo, amount):
-    """Takes three inputs, currency to, currency from, amount and retuens float point number"""
+        '''Takes three inputs, currency to, currency from, amount and retuens float point number'''
         cFrom = "USD" + cFrom.upper()
         cTo = "USD" + cTo.upper()
         amount = float(amount)
@@ -21,7 +21,7 @@ class currency(object):
             return ""
 
     def inputStr(self, userinput):
-    """Takes userinput """        
+        '''Takes userinput '''
         userinput = userinput.split(' ')
         response = {}
         for word in userinput:
