@@ -17,8 +17,8 @@ def checkPostcode():
     #https://api.postcodes.io/postcodes//validate
     #error check
     while True:
-        try:
-            print("Could you tell me your postcode? ") 
+        try: #try to retrive data
+            print("Could you tell me your postcode? ") #ask for an input from the user
             post_code = input().lower()
             response = requests.get(  #retrive data from a website
                 url="https://api.postcodes.io/postcodes/" + post_code + "/validate", #replacing post_code value using user's input
@@ -51,7 +51,7 @@ def findLocation():
         longlat.append(round(data['latitude'], 3)) #appending a value - latitude to the longlat list and round it to the third digit after the point.
         longlat.append(round(data['longitude'], 3)) #appending a value - longitude to the longlat list and round it to the third digit after the point.
         return(longlat) #return the longlat list to use it in the next two functions 
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException: #an exception if the data can't be retrived
         print('HTTP Request failed') 
 
 def cinemaSearch():
@@ -64,10 +64,10 @@ def cinemaSearch():
     try:
         response = requests.get(
             url="https://api.internationalshowtimes.com/v4/cinemas/?location=" + str(longlat[0]) + "," + str(longlat[1]) + "&distance=10", #using the first and the second values in the list 
-            params={
+            params={ #setting parameters
                 "countries": "GB",
             },
-            headers={
+            headers={ #api key to get access to the data
                 "X-API-Key": "VFMy2YO0yMDVtpkopLI6pDGtNrY9O0Ww",
             },
         )
@@ -81,7 +81,7 @@ def cinemaSearch():
         response_one = str(response_one.replace('"t ',"'t "))
         response_one = str(response_one.replace('"t, ',"'t, ")) #make a lot of replaces to avoid any errors
         response_one1 = str(response_one.replace("None", '"Null"'))
-        data = json.loads(response_one1)
+        data = json.loads(response_one1) #decode the data
         print(" ")
         print("Searching. Please wait... ")
         time.sleep(1.5)  #make an ilusion that the program is thinking 
