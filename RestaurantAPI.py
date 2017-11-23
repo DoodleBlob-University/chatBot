@@ -6,14 +6,11 @@ def getGooglePlacesRatings(restaurants, location, keyword):
     from googleplaces import GooglePlaces, types, lang
     google_places_api_key = 'AIzaSyDQ-mcgK1gSnI6soXWZnAA2Z9MeDnb5ZRo'
     google_places = GooglePlaces(google_places_api_key)
-     
-        
       
      query_result = google_places.nearby_search(location, keyword,radius=1000, types=[types.TYPE_RESTAURANT])
 
     if query_result.has_attributions:
         queryResult = (query_result.html_attributions)
-
 
     for place in query_result.places:
         name = (place.name)
