@@ -48,7 +48,7 @@ class currency(unittest.TestCase): #Thomas
         self.currency = currency
     
     def test_currency(self):
-        self.assertNotEqual(self.currency, "") #checks return is empty if unexpected input
+        self.assertNotEqual(self.currency, "") #checks currency always returns something
 
         
 
