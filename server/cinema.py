@@ -7,12 +7,12 @@ def cinemaSearch():
     """This function takes the location from the previous one as an input and prints
     the first five closest cinemas in a radius of 3,5 miles.- Mitko Donchev"""
     longlat = list(findLocation()) #using the output from the previous function and store it in a list
-    count = 0
+    count = 0 #set count to 0
     limit = 5 #set a limit
     #https://api.internationalshowtimes.com/v4/cinemas/?location=52.5,13.37&distance=1000
     try:
-        response = requests.get(
-            url="https://api.internationalshowtimes.com/v4/cinemas/?location=" + str(longlat[0])  + "," + str(longlat[1]) + "&distance=10", #using the first and the second values in the list 
+        response = requests.get( #retrive data from a website
+            url="https://api.internationalshowtimes.com/v4/cinemas/?location=" + str(longlat[0])  + "," + str(longlat[1]) + "&distance=10", #using the latitude and the longitude 
             params={ #setting parameters
                 "countries": "GB",
             },
@@ -42,16 +42,16 @@ def cinemaSearch():
             count += 1
             if count == limit:
                 break #for loop stops when it reaches the limit
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException: #an exception if the data can't be retrived
         print('HTTP Request failed')
 cinemaSearch()
 
 def cinemaID():
     """This function takes the location from the first function as input and gives 
     all information about the closest cinemas as output but do not print it to the user - Mitko Donchev"""
-    longlat = list(findLocation())
+    longlat = list(findLocation()) #use the output from the previous function and put it into a list
     count = 0
-    limit = 5
+    limit = 5 
     #https://api.internationalshowtimes.com/v4/cinemas/?location=52.5,13.37&distance=1000
     try:
         response = requests.get(
@@ -92,7 +92,7 @@ def cinemaID():
 def showTime(IDC):
     """This function is using information from the previous function 
     as input and present to the user all the iformation for the selected cinema and the showtime.- Mitko Donchev """
-    cinemaIDlist = list(IDC) #use the output from the previous function and make it a list
+    cinemaIDlist = list(IDC) #use the output from the previous function and put it into a list
     while True: #using while loop to give the user an option to get information about several cinemas 
         try: #checks if the input is valid or not by tring to execute the code block
             user_cin = int(input("For which cinema do you want more information (pick a number)? ")) #askoing user to choose a cinema
@@ -126,7 +126,7 @@ def showTime(IDC):
                     print('Website: ' + str(cinemaIDlist[2]))
                     print("-"*70)
                     print("Showtime for this cinema:")
-                    for item in data['movies']:
+                    for item in data['movies']: #accessing a key in the dictionary
                         print (str(countnew+1),".","Title:","",item['title'],"\n"," ","Image:","",item['poster_image_thumbnail']) #print the showtime - first five more popular movies 
                         time.sleep(0.8)
                         countnew += 1
