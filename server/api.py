@@ -86,7 +86,7 @@ def cinemaSearch():
         print("Searching. Please wait... ")
         time.sleep(1.5)  #make an ilusion that the program is thinking 
         print("These are the closest cinemas to your location:")
-        for item in data['cinemas']:
+        for item in data['cinemas']: #accessing a key in the dictionary
             print (str(count+1),".","Cinema name: ",item['name']) #by using for loop it prints only the first five closest cinemas
             print("-"*(len(item['name'])+23))
             time.sleep(0.8)
