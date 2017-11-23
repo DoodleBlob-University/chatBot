@@ -1,6 +1,3 @@
-#!/usr/bin/python
-''' client.py '''
-
 import socket
 import threading
 import argparse
@@ -10,15 +7,15 @@ import webbrowser
 from colorama import Fore, Style
 from aes import AESEncryption
 
-def getArgs():
+def getArgs(): ### Dominic Egginton
     ''' getArgs returns all program arguments '''
-    parser = argparse.ArgumentParser(description='') # Add description
+    parser = argparse.ArgumentParser(description='Client')
     parser.add_argument('-p', '--port', metavar='Port', type=int, default=1143, help='Server port')
     parser.add_argument('-a', '--address', metavar='Address', required=True, type=str, help='Server address')
     parser.add_argument('-k', '--key', metavar='Key', default='gbaei395y27ny9', type=str, help='Encryption Key')
     return parser.parse_args()
 
-def clear():
+def clear(): ### Charlie
     ''' clears bash terminal display '''
     if os.name in ('nt','dos'):
         subprocess.call("cls")
@@ -27,13 +24,13 @@ def clear():
     else:
         print("\n"*120)
 
-def drawHeader():
+def drawHeader(): ### Charlie
     ''' draws program ui header '''
     clear()
     print(Fore.GREEN + " _____ _           _    ______       _   \n" + Fore.BLUE + "/  __ \ |         | |   | ___ \     | |  \n" + Fore.MAGENTA + "| /  \/ |__   __ _| |_  | |_/ / ___ | |_ \n" + Fore.RED + "| |   | '_ \ / _` | __| | ___ \/ _ \| __|\n" + Fore.YELLOW + "| \__/\ | | | (_| | |_  | |_/ / (_) | |_ \n" + Fore.CYAN + " \____/_| |_|\__,_|\__| \____/ \___/ \__|\n\n" + Style.RESET_ALL + " "*17 + 'Welcome!' )
 
 
-def main():
+def main(): ### Dominic Egginton
     ''' main '''
     args = getArgs()
     drawHeader()
@@ -43,7 +40,7 @@ def main():
     except ConnectionRefusedError:
         print("Cannot connect to server.\nPlease try again later...")
         exit()
-    while True:
+    while True: # loop to loop over sending and receiving messages from server
         messageData = input('>> ')
         if messageData.lower() == 'exit':
             exit()
@@ -58,7 +55,7 @@ def main():
             receivedData = sock.recv(4096)
             try:
                 receivedStr = aesObject.decrypt(receivedData)
-                if receivedStr[:3] == '/w/':
+                if receivedStr[:3] == '/w/': # if server wants to open a website
                     webbrowser.open(receivedStr[3:])
                 else:
                     print(receivedStr)
