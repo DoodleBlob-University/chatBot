@@ -42,13 +42,15 @@ class TestAES(unittest.TestCase):#Charlie and Dom
     def test_encryptdecrypt(self):
         self.assertEqual("Hello World", self.aes.decrypt(self.aes.encrypt("Hello World")))
 
-class currency(unittest.TestCase):
+class currency(unittest.TestCase): #Thomas
     def setUp(self):
         from currency import currency
         self.currency = currency
+    
+    def test_currency(self):
+        self.assertNotEqual(self.currency, "") #checks return is empty if unexpected input
 
-    def test_notReturnBlank(self):
-        self.assertNotEqual(self.currency, "")
+        
 
 class TestGeocode(unittest.TestCase):#Charlie
     '''tests both functions in geocode.py to see if they return the correct values'''
