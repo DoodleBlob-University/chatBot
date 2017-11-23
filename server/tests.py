@@ -46,17 +46,11 @@ class currency(unittest.TestCase): #Thomas
     def setUp(self):
         from currency import currency
         self.currency = currency
-<<<<<<< HEAD
     
     def test_currency(self):
         self.assertNotEqual(self.currency, "") #checks return is empty if unexpected input
 
         
-=======
-
-    def test_notReturnBlank(self):
-        self.assertNotEqual(self.currency, "")
->>>>>>> bf41c91737620603836937f1266e44fef31232e6
 
 class TestGeocode(unittest.TestCase):#Charlie
     '''tests both functions in geocode.py to see if they return the correct values'''
