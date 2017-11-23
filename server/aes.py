@@ -14,7 +14,7 @@ class AESEncryption(object):
         plaintext = self._pad(plaintext)    #Pads plaintext so its size is a multiple of 16 bytes
         init = Random.new().read(AES.block_size)
         cipher = AES.new(self.key, AES.MODE_CFB, init) ###Charlie's Code
-        return base64.b64encode(iv + cipher.encrypt(plaintext))
+        return base64.b64encode(init + cipher.encrypt(plaintext))
 
     def decrypt(self, encryptedStr):
         encryptedStr = base64.b64decode(encryptedStr)
