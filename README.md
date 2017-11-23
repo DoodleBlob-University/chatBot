@@ -14,6 +14,8 @@ python3 client/client.py -a 'server address'
 ```
 Note: When running server.py please run python from the same directory as it needs to be able to find keywords.json
 
+## Testing
+``` python3 server/tests.py ```
 ## Bugs
 To report bugs please click [here](https://github.coventry.ac.uk/eggintod/chatBot/issues/new). When you report bugs please assign someone who you think can help fix it. tag your issues as a bug, and please give as much detail as possible.
 
