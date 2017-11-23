@@ -21,20 +21,15 @@ def getGooglePlacesRatings(restaurants, location, keyword):
         for place in query_result.places:
             if (restaurantName == place.name.lower() or
                 'restaurant ' + restaurantName  == place.name.lower() or
-                'restaurante ' + restaurantName == place.name.lower() or
                 restaurantName + ' restaurant'  == place.name.lower() or
-                restaurantName + ' restaurante'  == place.name.lower() or
                 'restaurant ' + place.name.lower()  == restaurantName or
-                'restaurante ' + place.name.lower() == restaurantName or
-                place.name.lower() + ' restaurant'  == restaurantName or
-                place.name.lower() + ' restaurante'  == restaurantName
-                ):
-                place.get_details() """This iteration checks the possible combinations of """
+                place.name.lower() + ' restaurant'  == restaurantName):
+                place.get_details() 
                 if 'user_ratings_total' in place.details:
                     restarurantNumRatings=place.details['user_ratings_total']
                 else:
                     restarurantNumRatings='-'
-                result = (place.name, '\t', place.rating, '\t', restarurantNumRatings) """\t will cause the printed output to tab, making for neater presenation"""
+                result = (place.name, '\t', place.rating, '\t', restarurantNumRatings) #\t will tab the results 
                 restaurantFound = 1
                 break
 
