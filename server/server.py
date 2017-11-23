@@ -45,22 +45,22 @@ class server(object): ### Dominic Egginton
         ''' receiveFromClient handles incoming data from clients and sends formatted responses back to client '''
         byteSize = 4096 # large bytesize as we need to send and receive large data between client and server
         while True:
-            try:
+            #try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
                     receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"")
-                    client.sendall(aesObject.encrypt(self.formResponse(receivedStr, clientAddress)))
+                    client.sendall(aesObject.encrypt(self.formResponse(receivedStr, clientAddress, client)))
                 else:
                     print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
-            except Exception as e:
-                print("{} - Disconnecting {}\n".format(e, clientAddress))
-                client.close()
-                return False
+            #except Exception as e:
+            #    print("{} - Disconnecting {}\n".format(e, clientAddress))
+            #    client.close()
+            #    return False
 
-    def formResponse(self, receivedStr, clientAddress): ### Charlie Barry and Dominic Egginton
+    def formResponse(self, receivedStr, clientAddress, client): ### Charlie Barry and Dominic Egginton
         keysFound, extraData = self.searchJSON(receivedStr)
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
         if 'curse' in keysFound: ### Tom has done the curse code
@@ -80,8 +80,26 @@ class server(object): ### Dominic Egginton
             weatherData = weather()
             return weatherData.weatherResponse(keysFound, clientIpData, extraData)
 
-        elif 'cinema' in keysFound:
-            return "You are talking about cinema"
+        elif 'cinema' in keysFound: ### Charlie Barry and Mitko Donchev
+            from cinema import searchCinema, showTime, fetchCinema #imports all the functions from cinema.py
+            clientIpData = self.getIpData(clientAddress)
+            location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}#gets the location of the client from their ip address
+            aesObject = AESEncryption(self.key)
+            client.sendall(aesObject.encrypt(fetchCinema(location) + "Select a cinema for more information (type 'back' to go back)"))#sends message to client
+            while True:
+                cinemaData = client.recv(4096)#interepts message sent from client
+                cinemaStr = aesObject.decrypt(cinemaData).replace('!',"").replace('?',"")#decrypts message into plaintext
+                if cinemaStr.lower() != 'back':
+                    IDC = searchCinema(location)
+                    extracinemainfo = showTime(IDC,cinemaStr)
+                    client.sendall(aesObject.encrypt(extracinemainfo))#gets extra info for cinema and sends it to client
+                    if not(extracinemainfo == 'Wrong cinema! Please try again by chosing the right number!'):#if user inputted a legitimate answer
+                        cinemaData = client.recv(4096)#recieve any string
+                        break#returns to main server code
+                else:#if user says 'back' then returns to main server code
+                    break
+            return "Exitted Cinema Mode Successfully"#returns to main server code
+
 
         elif 'ipinfo' in keysFound:
             ipData = self.getIpData(clientAddress)

@@ -15,7 +15,7 @@ def getArgs(): ### Dominic Egginton
     parser.add_argument('-k', '--key', metavar='Key', default='gbaei395y27ny9', type=str, help='Encryption Key')
     return parser.parse_args()
 
-def clear(): ### Charlie
+def clear(): ### Charlie Barry
     ''' clears bash terminal display '''
     if os.name in ('nt','dos'):
         subprocess.call("cls")
@@ -24,7 +24,7 @@ def clear(): ### Charlie
     else:
         print("\n"*120)
 
-def drawHeader(): ### Charlie
+def drawHeader(): ### Charlie Barry
     ''' draws program ui header '''
     clear()
     print(Fore.GREEN + " _____ _           _    ______       _   \n" + Fore.BLUE + "/  __ \ |         | |   | ___ \     | |  \n" + Fore.MAGENTA + "| /  \/ |__   __ _| |_  | |_/ / ___ | |_ \n" + Fore.RED + "| |   | '_ \ / _` | __| | ___ \/ _ \| __|\n" + Fore.YELLOW + "| \__/\ | | | (_| | |_  | |_/ / (_) | |_ \n" + Fore.CYAN + " \____/_| |_|\__,_|\__| \____/ \___/ \__|\n\n" + Style.RESET_ALL + " "*17 + 'Welcome!' )
@@ -56,7 +56,7 @@ def main(): ### Dominic Egginton
             try:
                 receivedStr = aesObject.decrypt(receivedData)
                 if receivedStr[:3] == '/w/': # if server wants to open a website
-                    webbrowser.open(receivedStr[3:])
+                    webbrowser.open_new(receivedStr[3:])
                 else:
                     print(receivedStr)
             except ValueError:
