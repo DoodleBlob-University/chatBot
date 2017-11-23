@@ -1,20 +1,17 @@
-#!/usr/bin/python
-''' server.py '''
-
 import socket
 import threading
 import argparse
 import json
 import datetime
-import netifaces
-import requests
-from aes import AESEncryption
+import netifaces ### imported module netifaces <https://pypi.python.org/pypi/netifaces>
+import requests ### imported module requests <https://pypi.python.org/pypi/requests>
+from aes import AESEncryption ### imported module AESEncryption <https://pypi.python.org/pypi/pycrypto>
 from weather import weather
 from currency import currency
 
-class server(object):
-    ''' server is a class that handled network connections, pass host ip and host port for init'''
-    def __init__(self, hostIP, hostPort, key):
+class server(object): ### Dominic Egginton
+    ''' server is a class that handled network connections, pass host ip, host port and AES key for init'''
+    def __init__(self, hostIP, hostPort, key): ### Dominic Egginton
         self.hostIP = hostIP
         self.hostPort = hostPort
         self.key = key
@@ -23,50 +20,50 @@ class server(object):
         self.socket.bind((self.hostIP, self.hostPort))
         print('** server started on\n** internal - {}:{}\n** external - {}:{}\n'.format(self.getServerIP()['internal'], self.hostPort,self.getServerIP()['external'] ,self.hostPort))
 
-    def serverListen(self):#Dom
+    def serverListen(self): ### Dominic Egginton
         ''' serverListen listens to incoming connects from clients and opens a new thread for each connected client '''
         self.socket.listen(15)
         while True:
             try:
                 client, clientAddress = self.socket.accept()
                 client.settimeout(300)
-                threading.Thread(target=self.receiveFromClient,args = (client, clientAddress)).start()
+                threading.Thread(target=self.receiveFromClient,args = (client, clientAddress)).start() # Open new thread for each client. calling receiveFromClient and pass the client socket and client address
                 print('** Client Connected {} - {}'.format(clientAddress, self.getIpData(clientAddress)['city']))
             except:
                 raise Exception('Client connection error')
 
-    def getIpData(self, clientAddress):#Dom
-        '''gets ip information in json format from ip address'''
-        request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))#gets data about the clients ip
+    def getIpData(self, clientAddress): ### Dominic Egginton
+        ''' getIpData returns ip data from http://ip-api.com/ in json format. pass client address as string '''
+        request = requests.get('http://ip-api.com/json/{}'.format(clientAddress))
         requestJson = request.json()
-        if requestJson['status'] == 'success':#if received succesfully
+        if requestJson['status'] == 'success':
             return requestJson
         else:
-            return self.getIpData('') #else gets the ip for the server when the client is on the same network
+            return self.getIpData('') # recursive call in case client ip is in private range, therefore needs to get server ip data
 
-    def receiveFromClient(self, client, clientAddress):#Dom
-        ''' receiveFromClient handles incoming data from clients '''
-        byteSize = 4096
+    def receiveFromClient(self, client, clientAddress): ### Dominic Egginton
+        ''' receiveFromClient handles incoming data from clients and sends formatted responses back to client '''
+        byteSize = 4096 # large bytesize as we need to send and receive large data between client and server
         while True:
-            #try:
+            try:
                 receivedData = client.recv(byteSize)
                 if receivedData and type(receivedData) == bytes:
                     aesObject = AESEncryption(self.key)
                     receivedStr = aesObject.decrypt(receivedData).replace('!',"").replace('?',"")
                     client.sendall(aesObject.encrypt(self.formResponse(receivedStr, self.key, clientAddress)))
                 else:
-                    print('** Client Disconnected {}'.format(clientAddress))#when client disconnects
+                    print('** Client Disconnected {}'.format(clientAddress))
                     client.close()
                     return False
-            #except Exception as e:#any exception in server.py
-            #    print("{} - Disconnecting {}\n".format(e, clientAddress))
-            #    client.close()
-            #    return False
+            except Exception as e:
+                print("{} - Disconnecting {}\n".format(e, clientAddress))
+                client.close()
+                return False
 
-    def formResponse(self, receivedStr, key, clientAddress):#Charlie and Dom
+    def formResponse(self, receivedStr, key, clientAddress): ### Charlie and Dominic Egginton
         keysFound, extraData = self.searchJSON(receivedStr)
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
-        if 'curse' in keysFound:
+        if 'curse' in keysFound: ### Tom has done the curse code
             return "Please watch your language."
 
         elif 'currency' in keysFound:
@@ -96,12 +93,12 @@ class server(object):
         else:
             return "Sorry, I don't understand what you are talking about."
 
-    def getServerIP(self):#Charlie and Dom
-        ''' returns servers internal and external ip address '''
+    def getServerIP(self): ### Charlie and Dominic Egginton
+        ''' returns servers internal and external ip address as dictionary '''
         deviseName = netifaces.gateways()['default'][netifaces.AF_INET][1]
         return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
-    def searchJSON(self, recievedStr):#Charlie
+    def searchJSON(self, recievedStr): ### Charlie
         '''searches recievedStr for keywords which appear in keywords.json. returns a list of keysFound and a dictionary of additional data'''
         jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
@@ -135,7 +132,7 @@ class server(object):
 
         return keysFound, extraData
 
-    def celery(self):#Charlie
+    def celery(self): ### Charlie
         '''Celery man easter egg, returns a string in bytes'''
         from random import randint
         rand = randint(0, 3)        #gets a random integer between 0 and 3
@@ -144,23 +141,18 @@ class server(object):
         elif rand == 2: return b"4d3d3 engaged"
         elif rand == 3: return b"Generating nude Tayne"
 
-def getArgs():#Dom
+def getArgs(): ### Dominic Egginton
     ''' getArgs returns all program arguments '''
-    parser = argparse.ArgumentParser(description='') # Add description
+    parser = argparse.ArgumentParser(description='Server')
     parser.add_argument('-p', '--port', metavar='Port', default=1143, type=int, help='Server port')
     parser.add_argument('-k', '--key', metavar='Key', default='gbaei395y27ny9', type=str, help='Encryption Key')
     return parser.parse_args()
 
-def drawHeader():#Dom
-    ''' draws program ui header '''
-    print('*** Server Header ***\nWelcome\n\n')
-
-def main():#Dom
-    ''' main '''
-    drawHeader()
+def main(): ### Dominic Egginton
+    ''' main - init server '''
     args = getArgs()
     if args.port != 1143:
-        print('** no server port specified using default')
+        print('** no server port specified using default - 1143')
     server('', args.port, args.key).serverListen() # i have passed empty string for the host ip as it will be filled in later
 
 if __name__ == '__main__':
