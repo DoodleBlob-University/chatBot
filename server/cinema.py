@@ -3,49 +3,6 @@ import urllib.request
 import json
 import time
 
-#second getaddress API = TQoCHFHv8EeFKg8CXzXISQ11057
-def checkPostcode():
-    """This function takes a postcode as an inpit and check it is valid or not - Mitko Donchev"""
-    #https://api.postcodes.io/postcodes//validate
-    #error check
-    while True:
-        try: #try to retrive data
-            print("Could you tell me your postcode? ") #ask for an input from the user
-            post_code = input().lower()
-            response = requests.get(  #retrive data from a website
-                url="https://api.postcodes.io/postcodes/" + post_code + "/validate", #replacing post_code value using user's input
-            )
-            response = str(response.json()) #making json file a string
-            response_one = str(response.replace("'", '"')) #replace some characters in json file to decode it after in data
-            response_one = str(response.replace("True", '"True"'))
-            response_one = str(response_one.replace("'", '"'))
-            data = json.loads(response_one) #decode the data retrived from json format into lists/dictionaries
-            if data["result"] == "True": #accessing the decoded data as lists/dictionaries
-                break #the while loop stops if the poscode is valid
-        except ValueError: #if the input isn't a postcode, a message is printed and the while loop starts again
-            print("Worng postcode! Please try again...")
-    return(post_code) #return the postcode to be able to use it after
-
-post_code1 = checkPostcode() #use the postcode from the previous function
-def findLocation():
-    """This function use a postcode and gives the location as an output, but do not print it - Mitko Donchev"""
-    #https://api.getaddress.io/find/" + post_code + "?api-key=yKq60w4JvkuDFJUgGjtHjg11049
-    post_code = post_code1 
-    try:
-        response = requests.get( #retrive data from a new website
-            url="https://api.getaddress.io/find/" + post_code + "?api-key=hLpgUfHQU0eAculh2semoQ11095", #replacing post_code value using the postcode 
-        )
-        longlat = [] #creating an empty list
-        response = str(response.json()) 
-        response_one = str(response.replace("'", '"'))
-        response_one = str(response_one.replace("None", '"Null"'))
-        data = json.loads(response_one)
-        longlat.append(round(data['latitude'], 3)) #appending a value - latitude to the longlat list and round it to the third digit after the point.
-        longlat.append(round(data['longitude'], 3)) #appending a value - longitude to the longlat list and round it to the third digit after the point.
-        return(longlat) #return the longlat list to use it in the next two functions 
-    except requests.exceptions.RequestException: #an exception if the data can't be retrived
-        print('HTTP Request failed') 
-
 def cinemaSearch():
     """This function takes the location from the previous one as an input and prints
     the first five closest cinemas in a radius of 3,5 miles.- Mitko Donchev"""
@@ -55,7 +12,7 @@ def cinemaSearch():
     #https://api.internationalshowtimes.com/v4/cinemas/?location=52.5,13.37&distance=1000
     try:
         response = requests.get(
-            url="https://api.internationalshowtimes.com/v4/cinemas/?location=" + str(longlat[0]) + "," + str(longlat[1]) + "&distance=10", #using the first and the second values in the list 
+            url="https://api.internationalshowtimes.com/v4/cinemas/?location=" + str(longlat[0])  + "," + str(longlat[1]) + "&distance=10", #using the first and the second values in the list 
             params={ #setting parameters
                 "countries": "GB",
             },
