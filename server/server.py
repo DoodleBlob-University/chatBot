@@ -161,7 +161,7 @@ def getArgs(): ### Dominic Egginton
 def main(): ### Dominic Egginton
     ''' main - init server '''
     args = getArgs()
-    if args.port != 1143:
+    if args.port == 1143:
         print('** no server port specified using default - 1143')
     server('', args.port, args.key).serverListen() # i have passed empty string for the host ip as it will be filled in later
 
