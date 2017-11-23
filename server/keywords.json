@@ -82,7 +82,8 @@
     {
       "daily": "daily",
       "hourly": "hourly",
-      "hour": "hourly"
+      "hour": "hourly",
+      "day": "daily"
     }
     ,"location":
     [
