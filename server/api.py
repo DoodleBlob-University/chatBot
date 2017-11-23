@@ -15,6 +15,7 @@ if __name__ == '__main__':
 def checkPostcode():
     """This function takes a postcode as an inpit and check it is valid or not - Mitko Donchev"""
     #https://api.postcodes.io/postcodes//validate
+    #error check
     while True:
         try:
             print("Could you tell me your postcode? ") 
@@ -86,12 +87,12 @@ def cinemaSearch():
         time.sleep(1.5)  #make an ilusion that the program is thinking 
         print("These are the closest cinemas to your location:")
         for item in data['cinemas']:
-            print (str(count+1),".","Cinema name: ",item['name']) #by using for loop it prints only the first fice closest cinemas
+            print (str(count+1),".","Cinema name: ",item['name']) #by using for loop it prints only the first five closest cinemas
             print("-"*(len(item['name'])+23))
             time.sleep(0.8)
             count += 1
             if count == limit:
-                break #for loop stops when it reach the limit
+                break #for loop stops when it reaches the limit
     except requests.exceptions.RequestException:
         print('HTTP Request failed')
 cinemaSearch()
