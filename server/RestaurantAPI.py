@@ -1,7 +1,7 @@
 ##### Function to search google places ratings!!!!!!! #####
 def getGooglePlaces(restaurants, location, keyword):
     # 'restaurants': array of dictionaries = [{u"name":u"Jimbo's",u"location":u"Coventry"}
-    # Set google places api
+    """Set google places api"""
     from googleplaces import GooglePlaces, types, lang
     google_places_api_key = 'AIzaSyDQ-mcgK1gSnI6soXWZnAA2Z9MeDnb5ZRo'
     google_places = GooglePlaces(google_places_api_key)
@@ -17,7 +17,7 @@ def getGooglePlaces(restaurants, location, keyword):
         geoLocation = (place.geo_location)
         placeId = (place.place_id)
          
-        # Check and grab restaurant details
+        """Check and grab restaurant details"""
         for place in query_result.places:
             if (restaurantName == place.name.lower() or
                 'restaurant ' + restaurantName  == place.name.lower() or
