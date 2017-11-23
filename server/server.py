@@ -60,7 +60,7 @@ class server(object): ### Dominic Egginton
                 client.close()
                 return False
 
-    def formResponse(self, receivedStr, key, clientAddress): ### Charlie and Dominic Egginton
+    def formResponse(self, receivedStr, key, clientAddress): ### Charlie Barry and Dominic Egginton
         keysFound, extraData = self.searchJSON(receivedStr)
         # IF ONLY PYTHON HAD SWITCH STATEMENTS <- :) :)
         if 'curse' in keysFound: ### Tom has done the curse code

@@ -1,5 +1,5 @@
 #CurrencyAPI
-import requests ### imported module requests <https://pypi.python.org/pypi/requests> 9/11/2017
+import requests ### imported module requests <https://pypi.python.org/pypi/requests> - 9/11/2017
 
 class currency(object):
     def __init__(self):

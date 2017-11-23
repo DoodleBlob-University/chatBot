@@ -1,5 +1,5 @@
-import requests ### imported module requests <https://pypi.python.org/pypi/requests> 9/11/2017
-### Charlie's Code
+import requests ### imported module requests <https://pypi.python.org/pypi/requests> - 9/11/2017
+### Charlie Barry
 class geocode(object):
     def __init__(self):
         self.googlePlaces = 'AIzaSyDQ-mcgK1gSnI6soXWZnAA2Z9MeDnb5ZRo'
@@ -26,4 +26,3 @@ class geocode(object):
         if placeinfo['status'] == "OK":
             return placeinfo['predictions'][0]['place_id']
         return ""
-### End Charlie's Code
