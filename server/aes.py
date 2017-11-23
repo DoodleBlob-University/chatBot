@@ -4,7 +4,7 @@ from Crypto import Random ### imported Random from Crypto <https://pypi.python.o
 from Crypto.Cipher import AES ### imported AES from Crypto.Cipher <https://pypi.python.org/pypi/pycrypto> - 09/11/17
 
 class AESEncryption(object):
-### Charlie's Code
+### Charlie Barry
     def __init__(self, key):
         self.bs = 32    #AES block size
         self.key = hashlib.sha256(key.encode()).digest()    #Applies SHA265 Hash to the encoded key, then digests using hashlib
