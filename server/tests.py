@@ -23,6 +23,9 @@ class testServer(unittest.TestCase):
         self.assertEqual(self.server.formResponse('Hey you whats up ?', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
         self.assertEqual(self.server.formResponse('Whats my ip info ?', '8.8.8.8'), "Your IP is 8.8.8.8, provided by Google.")
 
+    def test_getServerIP(self):
+        self.assertTrue(self.server.getServerIP()['external'] == self.server.getIpData('')['query'])
+
     def test_searchJSON(self): ### Charlie Barry
         self.assertEqual(self.server.searchJSON('This has no keywords'), ([], {}))              #checks if response is correct when no keywords are present
         self.assertEqual(self.server.searchJSON('Hi what is the weather'), (['weather'], {}))   #tests whether it can recognise a keyword
