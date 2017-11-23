@@ -93,12 +93,12 @@ class server(object): ### Dominic Egginton
         else:
             return "Sorry, I don't understand what you are talking about."
 
-    def getServerIP(self): ### Charlie and Dominic Egginton
+    def getServerIP(self): ### Charlie Barry and Dominic Egginton
         ''' returns servers internal and external ip address as dictionary '''
         deviseName = netifaces.gateways()['default'][netifaces.AF_INET][1]
         return {'internal': netifaces.ifaddresses(deviseName)[netifaces.AF_INET][0]['addr'],'external': self.getIpData('')['query']}
 
-    def searchJSON(self, recievedStr): ### Charlie
+    def searchJSON(self, recievedStr): ### Charlie Barry
         '''searches recievedStr for keywords which appear in keywords.json. returns a list of keysFound and a dictionary of additional data'''
         jsonData = json.load(open('keywords.json', encoding='utf-8'))
         recievedList = recievedStr.split(" ")
