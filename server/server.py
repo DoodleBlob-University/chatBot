@@ -96,7 +96,7 @@ class server(object): ### Dominic Egginton
                     if not(extracinemainfo == 'Wrong cinema! Please try again by chosing the right number!'):#if user inputted a legitimate answer
                         cinemaData = client.recv(4096)#recieve any string
                         break#returns to main server code
-                else:#if user says 'back' then returns to main server code
+                elif cinemaStr.lower() == 'back':#if user says 'back' then returns to main server code
                     break
             return "Exitted Cinema Mode Successfully"#returns to main server code
 
