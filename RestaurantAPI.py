@@ -1,5 +1,5 @@
 ##### Function to search google places ratings!!!!!!! #####
-def getGooglePlacesRatings(restaurants):
+def getGooglePlacesRatings(restaurants, location, keyword):
     # 'restaurants': array of dictionaries = [{u"name":u"Jimbo's",u"location":u"Coventry"},{u"name":u"Taste of China",u"location":u"London"}]
  
     # Set google places api
@@ -7,13 +7,18 @@ def getGooglePlacesRatings(restaurants):
     google_places_api_key = 'AIzaSyDQ-mcgK1gSnI6soXWZnAA2Z9MeDnb5ZRo'
     google_places = GooglePlaces(google_places_api_key)
      
-    #Search restaurants
-    for restaurant in restaurants:
-        restaurantFound = 0
-        restaurantName = restaurant["name"].lower()
-        restaurantLocation = restaurant["location"].lower()
- 
-        query_result = google_places.nearby_search(keyword=restaurantName, location=restaurantLocation, radius="50000", types=[types.TYPE_FOOD], sensor="false")
+        
+      
+     query_result = google_places.nearby_search(location, keyword,radius=1000, types=[types.TYPE_RESTAURANT])
+
+    if query_result.has_attributions:
+        queryResult = (query_result.html_attributions)
+
+
+    for place in query_result.places:
+        name = (place.name)
+        geoLocation = (place.geo_location)
+        placeId = (place.place_id)
          
         # Loop query results
         for place in query_result.places:
@@ -36,4 +41,4 @@ def getGooglePlacesRatings(restaurants):
                 restaurantFound = 1
                 break
 
-    return(result)
+    return(result, queryResult, name, geoLocation, placeId)
