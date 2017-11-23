@@ -1,25 +1,26 @@
 import base64
 import hashlib
-from Crypto import Random
-from Crypto.Cipher import AES
+from Crypto import Random ### imported Random from Crypto <https://pypi.python.org/pypi/pycrypto> - 09/11/17
+from Crypto.Cipher import AES ### imported AES from Crypto.Cipher <https://pypi.python.org/pypi/pycrypto> - 09/11/17
 
 class AESEncryption(object):
-
+### Charlie's Code
     def __init__(self, key):
-        self.bs = 32
-        self.key = hashlib.sha256(key.encode()).digest()
+        self.bs = 32    #AES block size
+        self.key = hashlib.sha256(key.encode()).digest()    #Applies SHA265 Hash to the encoded key, then digests using hashlib
 
-    def encrypt(self, rawData):
-        rawData = self._pad(rawData)
-        iv = Random.new().read(AES.block_size)
-        cipher = AES.new(self.key, AES.MODE_CFB, iv)
-        return base64.b64encode(iv + cipher.encrypt(rawData))
+### Code from Stack Overflow Post about AES Encryption <https://stackoverflow.com/questions/12524994/encrypt-decrypt-using-pycrypto-aes-256> 9/11/2017
+    def encrypt(self, plaintext):
+        plaintext = self._pad(plaintext)    #Pads plaintext so its size is a multiple of 16 bytes
+        init = Random.new().read(AES.block_size)
+        cipher = AES.new(self.key, AES.MODE_CFB, init) ### Charlie Barry
+        return base64.b64encode(init + cipher.encrypt(plaintext))
 
-    def decrypt(self, encrypted):
-        encrypted = base64.b64decode(encrypted)
-        iv = encrypted[:AES.block_size]
-        cipher = AES.new(self.key, AES.MODE_CFB, iv)
-        return self._unpad(cipher.decrypt(encrypted[AES.block_size:])).decode('utf-8')
+    def decrypt(self, encryptedStr):
+        encryptedStr = base64.b64decode(encryptedStr)
+        init = encryptedStr[:AES.block_size]
+        cipher = AES.new(self.key, AES.MODE_CFB, init) ### Charlie Barry
+        return self._unpad(cipher.decrypt(encryptedStr[AES.block_size:])).decode('utf-8')
 
     def _pad(self, s):
         return s + (self.bs - len(s) % self.bs) * chr(self.bs - len(s) % self.bs)
