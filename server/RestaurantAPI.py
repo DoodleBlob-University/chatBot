@@ -1,4 +1,4 @@
-##### Function to search google places ratings!!!!!!! #####
+ ##### Function to search google places ratings!!!!!!! #####
 def getGooglePlaces(restaurants, location, keyword):
     # 'restaurants': array of dictionaries = [{u"name":u"Jimbo's",u"location":u"Coventry"}
     """Set google places api"""
@@ -30,7 +30,7 @@ def getGooglePlaces(restaurants, location, keyword):
                 else:
                     restarurantNumRatings='-'
                 result = (place.name, '\t', place.rating, '\t', restarurantNumRatings) #\t will tab the results 
-                restaurantFound = 1
+                restaurantFound = 1 # Sets boolean flag to true
                 break
                 
     except:
