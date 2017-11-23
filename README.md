@@ -7,9 +7,12 @@ Follow the next few steps to get started.
 git clone https://github.coventry.ac.uk/eggintod/chatBot.git
 cd chatBot
 pip3 install -r requirements.txt
-python3 server/server.py
+cd server/
+python3 server.py
+
 python3 client/client.py -a 'server address'
 ```
+Note: When running server.py please run python from the same directory as it needs to be able to find keywords.json
 
 ## Bugs
 To report bugs please click [here](https://github.coventry.ac.uk/eggintod/chatBot/issues/new). When you report bugs please assign someone who you think can help fix it. tag your issues as a bug, and please give as much detail as possible.
