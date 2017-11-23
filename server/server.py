@@ -134,7 +134,6 @@ class server(object): ### Dominic Egginton
 
 
 def getArgs(): ### Dominic Egginton
->>>>>>> ca16f33db7414c4db54209c93faebc6db09e3625
     ''' getArgs returns all program arguments '''
     parser = argparse.ArgumentParser(description='Server')
     parser.add_argument('-p', '--port', metavar='Port', default=1143, type=int, help='Server port')
