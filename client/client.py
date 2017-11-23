@@ -4,7 +4,7 @@ import argparse
 import os
 import subprocess
 import webbrowser
-from colorama import Fore, Style
+from colorama import Fore, Style ### imported module colorama <https://pypi.python.org/pypi/colorama> - 09/11/17
 from aes import AESEncryption
 
 def getArgs(): ### Dominic Egginton
