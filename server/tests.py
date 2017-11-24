@@ -32,6 +32,9 @@ class testServer(unittest.TestCase):
         self.assertEqual(extraData, {'location': 'Coventry'}) #tests whether it can recognise a keyword and fetch location name
         keysFound, extraData = self.server.searchJSON('10 gbp to usd')
         self.assertDictEqual(extraData, {'currency': {'amount': '10.0', 'cTo': 'usd', 'cFrom': 'gbp'}}) #tests whether returns a correct currency dictionary
+        keysFound, extraData = self.server.searchJSON('woo this is a string woah here is the keyword daily and now it is gone')
+        self.assertEqual(extraData, {'time' : 'daily'}) #tests whether it can fetch time from a string
+
 
 
     def closeSocket(self):
