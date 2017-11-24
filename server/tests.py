@@ -89,8 +89,6 @@ class TestGeocode(unittest.TestCase): ### Charlie Barry
     def test_getPlaceID(self):
         placeID = self.geocode.getPlaceID("Coventry")               #gets PlaceID of Coventry
         self.assertEqual("ChIJtyJuZVGxcEgRiQZPVvVg9gQ", placeID)    #checks if PlaceID is correct
-
-    def test_getPlaceIDFAIL(self):
         placeID = self.geocode.getPlaceID("")   #inputs empty string
         self.assertEqual("", placeID)           #checks if status is NOT okay
 
