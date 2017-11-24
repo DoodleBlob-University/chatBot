@@ -28,7 +28,11 @@ class testServer(unittest.TestCase):
     def test_searchJSON(self): ### Charlie Barry
         self.assertEqual(self.server.searchJSON('This has no keywords'), ([], {}))              #checks if response is correct when no keywords are present
         self.assertEqual(self.server.searchJSON('Hi what is the weather'), (['weather'], {}))   #tests whether it can recognise a keyword
-        self.assertEqual(self.server.searchJSON('Is it going to rain in Coventry'), (['weather', 'location'], {'location': 'Coventry'}) or (['weather', 'location'], {'location': 'Coventry'})) #tests whether it can recognise a keyword and fetch location name
+        keysFound, extraData = self.server.searchJSON('Is it going to rain in Coventry')
+        self.assertEqual(extraData, {'location': 'Coventry'}) #tests whether it can recognise a keyword and fetch location name
+        keysFound, extraData = self.server.searchJSON('10 gbp to usd')
+        self.assertDictEqual(extraData, {'currency': {'amount': '10.0', 'cTo': 'usd', 'cFrom': 'gbp'}}) #tests whether returns a correct currency dictionary
+
 
     def closeSocket(self):
         self.server.socket.close()
