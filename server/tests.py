@@ -19,7 +19,6 @@ class testServer(unittest.TestCase):
         self.assertNotEqual(self.server.formResponse('1 gbp to usd', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
         self.assertEqual(self.server.formResponse('open celery', '127.0.0.1'), "/w/https://youtu.be/MHWBEK8w_YY")
         self.assertEqual(self.server.formResponse('get me the fucking weather', '127.0.0.1'), "Please watch your language.")
-        self.assertEqual(self.server.formResponse('am i talking about cinema ?', '127.0.0.1'), "You are talking about cinema")
         self.assertEqual(self.server.formResponse('Hey you whats up ?', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
         self.assertEqual(self.server.formResponse('Whats my ip info ?', '8.8.8.8'), "Your IP is 8.8.8.8, provided by Google.")
 
