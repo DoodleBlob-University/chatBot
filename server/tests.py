@@ -12,15 +12,15 @@ class testServer(unittest.TestCase):
         self.assertEqual(self.server.getIpData('127.0.0.1')['status'], 'success')
 
     def test_formResponse(self): ### Dominic Egginton
-        self.assertNotEqual(self.server.formResponse('Hey, what is the weather', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
-        self.assertNotEqual(self.server.formResponse('Whats the weather like in london?', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
-        self.assertNotEqual(self.server.formResponse('Can you get me the daily weather in Hinckley', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
-        self.assertNotEqual(self.server.formResponse('grab me the hourly weather', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
-        self.assertNotEqual(self.server.formResponse('1 gbp to usd', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
-        self.assertEqual(self.server.formResponse('open celery', '127.0.0.1'), "/w/https://youtu.be/MHWBEK8w_YY")
-        self.assertEqual(self.server.formResponse('get me the fucking weather', '127.0.0.1'), "Please watch your language.")
-        self.assertEqual(self.server.formResponse('Hey you whats up ?', '127.0.0.1'), "Sorry, I don't understand what you are talking about.")
-        self.assertEqual(self.server.formResponse('Whats my ip info ?', '8.8.8.8'), "Your IP is 8.8.8.8, provided by Google.")
+        self.assertNotEqual(self.server.formResponse('Hey, what is the weather', '127.0.0.1', None), "Sorry, I don't understand what you are talking about.")
+        self.assertNotEqual(self.server.formResponse('Whats the weather like in london?', '127.0.0.1', None), "Sorry, I don't understand what you are talking about.")
+        self.assertNotEqual(self.server.formResponse('Can you get me the daily weather in Hinckley', '127.0.0.1', None), "Sorry, I don't understand what you are talking about.")
+        self.assertNotEqual(self.server.formResponse('grab me the hourly weather', '127.0.0.1', None), "Sorry, I don't understand what you are talking about.")
+        self.assertNotEqual(self.server.formResponse('1 gbp to usd', '127.0.0.1', None), "Sorry, I don't understand what you are talking about.")
+        self.assertEqual(self.server.formResponse('open celery', '127.0.0.1', None), "/w/https://youtu.be/MHWBEK8w_YY")
+        self.assertEqual(self.server.formResponse('get me the fucking weather', '127.0.0.1', None), "Please watch your language.")
+        self.assertEqual(self.server.formResponse('Hey you whats up ?', '127.0.0.1', None), "Sorry, I don't understand what you are talking about.")
+        self.assertEqual(self.server.formResponse('Whats my ip info ?', '8.8.8.8', None), "Your IP is 8.8.8.8, provided by Google.")
 
     def test_getServerIP(self):
         self.assertTrue(self.server.getServerIP()['external'] == self.server.getIpData('')['query'])
