@@ -13,7 +13,6 @@ class weather(object): ### Dominic Egginton
 
     def weatherResponse(self, keysFound, clientaddress, extra): ### Dominic Egginton
         ''' weatherResponse takes keysFound in client test, the client adrress and extra data and retunes a formatted string '''
-        location = {}
         locationStr = ""
         if 'location' in keysFound:
             from geocode import geocode
