@@ -17,6 +17,7 @@ def getArgs(): ### Dominic Egginton
 
 def clear(): ### Charlie Barry
     ''' clears bash terminal display '''
+    ### Code from stack overflow <https://stackoverflow.com/questions/517970/how-to-clear-the-interpreter-console> - 9/11/17
     if os.name in ('nt','dos'):
         subprocess.call("cls")
     elif os.name in ('linux','osx','posix'):
