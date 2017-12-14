@@ -81,6 +81,7 @@ class server(object): ### Dominic Egginton
             return weatherData.weatherResponse(keysFound, clientIpData, extraData)
 
         elif 'cinema' in keysFound: ### Charlie Barry and Mitko Donchev
+            ### I apologise for the laziness of this code, need to patch it up sometime :( - Charlie
             from cinema import searchCinema, showTime, fetchCinema #imports all the functions from cinema.py
             clientIpData = self.getIpData(clientAddress)
             location = {'latitude': clientIpData['lat'], 'longitude': clientIpData['lon']}#gets the location of the client from their ip address
