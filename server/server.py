@@ -142,7 +142,7 @@ class server(object): ### Dominic Egginton
 
                         elif key == 'time' and 'time' not in keysFound:                 #if the key is 'time', and a time has not yet been found
                             keysFound.append(key)                                       #add the key to keysFound
-                            extraData['time'] = keyword                                 #adds time to extraData
+                            extraData['time'] = jsonData[key][keyword]                                 #adds time to extraData
 
                         else:
                             if key not in keysFound:            #if the key has not yet been found
